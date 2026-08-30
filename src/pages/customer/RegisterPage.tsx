@@ -124,11 +124,11 @@ export default function RegisterPage() {
       }
 
       setSuccess(
-        "Account created successfully! Redirecting to login..."
+        "Account created successfully! Redirecting to email verification..."
       );
 
       setTimeout(() => {
-        navigate("/customer/login");
+        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
       }, 1200);
     } catch (err) {
       setError(

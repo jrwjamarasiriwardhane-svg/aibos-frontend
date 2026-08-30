@@ -57,7 +57,7 @@ export default function RegisterPage() {
         throw new Error(data.message || "Registration failed");
       }
 
-      navigate("/professional/login");
+      navigate(`/verify-email?email=${encodeURIComponent(formData.email)}&role=professional`);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Something went wrong. Please try again."

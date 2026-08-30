@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   CheckCircle2,
   MapPin,
@@ -6,6 +7,7 @@ import {
   ShieldCheck,
   Star,
   Briefcase,
+  ArrowLeft,
 } from "lucide-react";
 
 interface ProfessionalProfile {
@@ -32,6 +34,7 @@ interface ProfessionalProfile {
 }
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -178,26 +181,31 @@ export default function ProfilePage() {
       {/* Header */}
 
       <header className="border-b border-slate-200 bg-white">
-
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
-
-          <div>
-            <p className="text-sm font-semibold text-blue-600">
-              AIBOS
-            </p>
-
-            <h1 className="text-xl font-bold text-slate-900">
-              Professional Profile
-            </h1>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => navigate("/professional/dashboard")}
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              <ArrowLeft size={15} />
+              Dashboard
+            </button>
+            <div>
+              <p className="text-xs font-semibold text-blue-600 uppercase">
+                AIBOS Professional
+              </p>
+              <h1 className="text-lg font-bold text-slate-900 leading-tight">
+                Profile & Verification
+              </h1>
+            </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-slate-500">
-            <ShieldCheck size={18} />
-            Secure Workspace
+            <ShieldCheck size={18} className="text-emerald-600" />
+            <span className="hidden sm:inline">Secure Workspace</span>
           </div>
-
         </div>
-
       </header>
 
       {/* Main */}

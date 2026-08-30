@@ -1,5 +1,5 @@
 import React from "react";
-import type { ServiceRequest } from "../../../types/ServiceRequest";
+import type { ServiceRequest } from "../types/ServiceRequest";
 
 interface ServiceRequestCardProps {
   request: ServiceRequest;
