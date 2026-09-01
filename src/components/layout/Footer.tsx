@@ -112,8 +112,7 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin size={18} />
                 <span>
-                  Galle,
-                  Sri-Lanka
+                  Galle
                   <br />
                   Sri Lanka
                 </span>
