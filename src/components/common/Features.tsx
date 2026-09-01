@@ -6,7 +6,7 @@ import {
   Bell,
   BadgeCheck,
   Zap,
-  Sparkles,
+ // Sparkles,
   UserCheck,
   Briefcase,
   Building,
