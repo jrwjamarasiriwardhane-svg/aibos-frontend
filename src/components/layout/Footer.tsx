@@ -106,13 +106,14 @@ export default function Footer() {
 
               <div className="flex items-center gap-3">
                 <Phone size={18} />
-                <span>+94 77 123 4567</span>
+                <span>+94 76 115 3092</span>
               </div>
 
               <div className="flex items-start gap-3">
                 <MapPin size={18} />
                 <span>
-                  Colombo,
+                  Galle,
+                  Sri-Lanka
                   <br />
                   Sri Lanka
                 </span>
