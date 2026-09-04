@@ -7,8 +7,6 @@ import {
   ArrowRight,
   ShieldCheck,
   Search,
-  TrendingUp,
-  TrendingDown,
   Clock,
   CheckCircle2,
   Activity,
@@ -32,6 +30,8 @@ import AccountOverview from "./components/AccountOverview";
 import CustomerSidebar from "./components/CustomerSidebar";
 import CustomerRequestList from "./components/CustomerRequestList";
 import NotificationBell from "../../components/notifications/NotificationBell";
+import HudStatCard from "../../components/dashboard/HudStatCard";
+import RadarEmptyState from "../../components/dashboard/RadarEmptyState";
 
 import { getMyServiceRequests } from "./services/serviceRequestService";
 import type { ServiceRequest } from "./types/ServiceRequest";
@@ -57,92 +57,9 @@ function getGreeting() {
   return "Good evening";
 }
 
-function useCountUp(target: number, duration = 1200) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (target === 0) {
-      setCount(0);
-      return;
-    }
-    let start = 0;
-    const step = Math.ceil(target / (duration / 16));
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(start);
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [target, duration]);
-  return count;
-}
-
 // ─────────────────────────────────────────────
 // Sub-components
 // ─────────────────────────────────────────────
-
-/** Animated stat card with glow effect */
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-  gradient,
-  glow,
-  delta,
-  deltaUp,
-  suffix = "",
-}: {
-  label: string;
-  value: number;
-  icon: React.ElementType;
-  gradient: string;
-  glow: string;
-  delta?: string;
-  deltaUp?: boolean;
-  suffix?: string;
-}) {
-  const animated = useCountUp(value);
-  return (
-    <div
-      className={`relative overflow-hidden rounded-2xl p-5 text-white shadow-lg ${gradient}`}
-      style={{ boxShadow: `0 4px 32px 0 ${glow}` }}
-    >
-      <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/70">
-            {label}
-          </p>
-          <p className="mt-1 text-4xl font-black tabular-nums">
-            {animated}
-            {suffix}
-          </p>
-          {delta && (
-            <span
-              className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${deltaUp
-                  ? "bg-emerald-400/20 text-emerald-200"
-                  : "bg-red-400/20 text-red-200"
-                }`}
-            >
-              {deltaUp ? (
-                <TrendingUp size={10} />
-              ) : (
-                <TrendingDown size={10} />
-              )}
-              {delta}
-            </span>
-          )}
-        </div>
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/20">
-          <Icon size={22} />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /** Glassy AI insight card */
 function InsightCard({
@@ -484,40 +401,45 @@ export default function CustomerDashboard() {
         {/* ━━━━━━━ PAGE CONTENT ━━━━━━━ */}
         <div className="mx-auto max-w-7xl space-y-7 p-5 sm:p-8">
 
-          {/* ── HERO BANNER ──────────────────────────────── */}
-          <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-900 px-8 py-10 text-white shadow-2xl sm:px-12 sm:py-14">
-            {/* animated blobs */}
-            <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-blue-500/25 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-20 right-48 h-64 w-64 rounded-full bg-violet-500/20 blur-3xl" />
-            <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-40 -translate-x-1/2 rounded-full bg-cyan-400/10 blur-2xl" />
+          {/* ── HERO HUD COMMAND BANNER ──────────────────────────────── */}
+          <section className="relative overflow-hidden rounded-3xl border border-cyan-500/25 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 px-8 py-10 text-white shadow-2xl sm:px-12 sm:py-12">
+            {/* Cyber grid and ambient light accents */}
+            <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-cyan-500/15 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-20 right-48 h-64 w-64 rounded-full bg-blue-500/15 blur-3xl" />
+            
+            {/* Corner Tech Accents */}
+            <div className="absolute top-3 left-3 h-2 w-2 border-t-2 border-l-2 border-cyan-400" />
+            <div className="absolute top-3 right-3 h-2 w-2 border-t-2 border-r-2 border-cyan-400" />
+            <div className="absolute bottom-3 left-3 h-2 w-2 border-b-2 border-l-2 border-cyan-400" />
+            <div className="absolute bottom-3 right-3 h-2 w-2 border-b-2 border-r-2 border-cyan-400" />
 
             <div className="relative">
               <div className="flex flex-wrap items-start justify-between gap-6">
                 {/* Left */}
                 <div className="max-w-xl">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-blue-400/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest text-blue-300">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-400" />
-                    AI Business Operating System
+                  <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/50 px-3.5 py-1.5 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cyan-300">
+                    <span className="h-2 w-2 animate-ping rounded-full bg-cyan-400" />
+                    AUTONOMOUS DISPATCH COMMAND
                   </span>
 
-                  <h2 className="mt-5 text-3xl font-black tracking-tight sm:text-5xl">
+                  <h2 className="mt-5 text-3xl font-black tracking-tight sm:text-5xl text-white">
                     {getGreeting()},{" "}
-                    <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-200 bg-clip-text text-transparent">
                       {firstName}
                     </span>{" "}
                     👋
                   </h2>
 
-                  <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base">
-                    Your intelligent workspace is ready. Manage service requests,
-                    find verified professionals, and track progress — all in one place.
+                  <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base font-medium">
+                    Your intelligent dispatch workspace is live. Monitor service requests,
+                    match with verified professionals, and track progress in real time.
                   </p>
 
                   <div className="mt-7 flex flex-wrap gap-3">
                     <button
                       type="button"
                       onClick={() => navigate("/request-service")}
-                      className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-black text-blue-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-xl"
+                      className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-cyan-500/25 transition hover:from-cyan-400 hover:to-blue-500 hover:shadow-cyan-400/40 active:scale-95"
                     >
                       <Plus size={16} />
                       New Service Request
@@ -525,29 +447,29 @@ export default function CustomerDashboard() {
                     <button
                       type="button"
                       onClick={() => navigate("/services/search")}
-                      className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                      className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur transition hover:border-cyan-400 hover:text-white"
                     >
-                      Find Professionals
+                      Find Specialists
                       <ArrowRight size={15} />
                     </button>
                   </div>
                 </div>
 
-                {/* Right micro-stats (xl only) */}
+                {/* Right micro-telemetry (xl only) */}
                 <div className="hidden flex-col gap-3 xl:flex">
                   {[
-                    { label: "Active", val: activeRequests, color: "text-cyan-300" },
-                    { label: "Completed", val: completedServices, color: "text-emerald-300" },
-                    { label: "Total", val: totalRequests, color: "text-violet-300" },
+                    { label: "Active In Mesh", val: activeRequests, color: "text-cyan-400" },
+                    { label: "Completed", val: completedServices, color: "text-emerald-400" },
+                    { label: "Total Handled", val: totalRequests, color: "text-blue-400" },
                   ].map(({ label, val, color }) => (
                     <div
                       key={label}
-                      className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 backdrop-blur"
+                      className="rounded-xl border border-slate-800 bg-slate-950/70 px-5 py-3 backdrop-blur"
                     >
-                      <p className="text-[11px] font-semibold uppercase tracking-widest text-white/50">
+                      <p className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-slate-400">
                         {label}
                       </p>
-                      <p className={`text-3xl font-black ${color}`}>{val}</p>
+                      <p className={`text-3xl font-black font-mono tabular-nums ${color}`}>{val}</p>
                     </div>
                   ))}
                 </div>
@@ -555,7 +477,7 @@ export default function CustomerDashboard() {
             </div>
           </section>
 
-          {/* ── STAT CARDS ───────────────────────────────── */}
+          {/* ── HUD STAT METRIC CARDS (REAL DATA BINDINGS ONLY) ───────────────────────────────── */}
           {loading ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {[...Array(4)].map((_, i) => (
@@ -564,40 +486,34 @@ export default function CustomerDashboard() {
             </div>
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard
+              <HudStatCard
                 label="Active Requests"
                 value={activeRequests}
                 icon={Activity}
-                gradient="bg-gradient-to-br from-blue-600 to-blue-700"
-                glow="rgba(59,130,246,0.35)"
-                delta="+12% this week"
-                deltaUp
+                color="cyan"
+                subtext={activeRequests > 0 ? "Currently in dispatch mesh" : "No ongoing requests"}
               />
-              <StatCard
-                label="Completed"
+              <HudStatCard
+                label="Completed Services"
                 value={completedServices}
                 icon={CheckCircle2}
-                gradient="bg-gradient-to-br from-emerald-500 to-teal-600"
-                glow="rgba(16,185,129,0.35)"
-                delta="+5% this month"
-                deltaUp
+                color="emerald"
+                subtext={`${completedServices} verified completions`}
               />
-              <StatCard
+              <HudStatCard
                 label="Total Requests"
                 value={totalRequests}
                 icon={ListTodo}
-                gradient="bg-gradient-to-br from-violet-600 to-purple-700"
-                glow="rgba(139,92,246,0.35)"
+                color="blue"
+                subtext="All-time customer requests"
               />
-              <StatCard
-                label="AI Score"
+              <HudStatCard
+                label="Dispatch Score"
                 value={satisfactionScore}
                 icon={Star}
-                gradient="bg-gradient-to-br from-amber-500 to-orange-500"
-                glow="rgba(245,158,11,0.35)"
+                color="amber"
                 suffix="%"
-                delta={satisfactionScore >= 70 ? "Excellent" : "Building up"}
-                deltaUp={satisfactionScore >= 70}
+                subtext={satisfactionScore >= 70 ? "High completion index" : "Standard operational score"}
               />
             </div>
           )}
@@ -812,9 +728,12 @@ export default function CustomerDashboard() {
                 </div>
                 <div className="space-y-4">
                   {requests.length === 0 && !loading && (
-                    <p className="py-6 text-center text-xs text-slate-400">
-                      No activity yet. Create your first request!
-                    </p>
+                    <RadarEmptyState
+                      title="No Live Activity Yet"
+                      description="Your telemetry log will record live updates as incoming service requests are matched."
+                      actionText="New Service Request"
+                      onAction={() => navigate("/request-service")}
+                    />
                   )}
                   {requests.slice(0, 5).map((req, idx) => {
                     const icons: Record<string, React.ElementType> = {

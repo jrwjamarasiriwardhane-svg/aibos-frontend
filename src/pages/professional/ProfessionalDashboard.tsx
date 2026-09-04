@@ -26,6 +26,9 @@ import {
   RefreshCw,
 } from "lucide-react";
 
+import HudStatCard from "../../components/dashboard/HudStatCard";
+import RadarEmptyState from "../../components/dashboard/RadarEmptyState";
+
 // ======================================================
 // TYPES
 // ======================================================
@@ -637,49 +640,42 @@ export default function ProfessionalDashboard() {
           </section>
 
           {/* =================================================
-              STATS
+              STATS (HUD COMMAND TELEMETRY)
           ================================================== */}
 
           <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
-            <StatCard
-              title="Available Requests"
-              value={String(
-                serviceRequests.length
-              )}
-              subtitle="Customer requests"
-              icon={
-                <Briefcase size={21} />
-              }
+            <HudStatCard
+              label="Available Requests"
+              value={serviceRequests.length}
+              icon={Briefcase}
+              color="cyan"
+              subtext="Customer requests in your zone"
             />
 
-            <StatCard
-              title="Active Work"
-              value="0"
-              subtitle="Current jobs"
-              icon={
-                <CheckCircle2
-                  size={21}
-                />
-              }
+            <HudStatCard
+              label="Active Work"
+              value={0}
+              icon={CheckCircle2}
+              color="emerald"
+              subtext="Current ongoing assignments"
             />
 
-            <StatCard
-              title="Total Earnings"
-              value="₹0"
-              subtitle="From completed work"
-              icon={
-                <DollarSign size={21} />
-              }
+            <HudStatCard
+              label="Total Earnings"
+              value={0}
+              icon={DollarSign}
+              color="blue"
+              suffix=" (₹)"
+              subtext="From completed service work"
             />
 
-            <StatCard
-              title="Your Rating"
-              value="—"
-              subtitle="Complete jobs to receive ratings"
-              icon={
-                <Star size={21} />
-              }
+            <HudStatCard
+              label="Verified Rating"
+              value={0}
+              icon={Star}
+              color="amber"
+              subtext="Complete jobs to receive ratings"
             />
 
           </section>
@@ -798,24 +794,12 @@ export default function ProfessionalDashboard() {
               !requestsError &&
               serviceRequests.length ===
                 0 && (
-                <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
-
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-
-                    <Search size={25} />
-
-                  </div>
-
-                  <h3 className="mt-4 font-semibold text-slate-900">
-                    No service requests yet
-                  </h3>
-
-                  <p className="mt-2 text-sm text-slate-500">
-                    New customer requests will
-                    appear here.
-                  </p>
-
-                </div>
+                <RadarEmptyState
+                  title="No Service Requests in Area"
+                  description="Incoming technical requests from customers in your zone will broadcast here in real time."
+                  actionText="Refresh Telemetry"
+                  onAction={fetchServiceRequests}
+                />
               )}
 
             {/* =================================================
@@ -1234,52 +1218,4 @@ function SidebarItem({
     </Link>
   );
 }
-
-// ============================================================
-// STAT CARD
-// ============================================================
-
-function StatCard({
-  title,
-  value,
-  subtitle,
-  icon,
-}: {
-  title: string;
-
-  value: string;
-
-  subtitle: string;
-
-  icon: ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-
-      <div className="flex items-start justify-between">
-
-        <div>
-
-          <p className="text-sm font-medium text-slate-500">
-            {title}
-          </p>
-
-          <p className="mt-2 text-2xl font-bold text-slate-900">
-            {value}
-          </p>
-
-          <p className="mt-1 text-xs text-slate-500">
-            {subtitle}
-          </p>
-
-        </div>
-
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-          {icon}
-        </div>
-
-      </div>
-
-    </div>
-  );
-}
+

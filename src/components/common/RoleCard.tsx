@@ -18,66 +18,66 @@ export default function RoleCards() {
   const services = [
     {
       title: "Electrician",
-      description: "Electrical installation, wiring repair, and safety maintenance",
+      description: "Electrical installation, wiring repair, breaker panel diagnostics, and safety audits",
       icon: Zap,
-      badge: "Top Requested",
-      count: "320+ Online",
+      badge: "High Demand",
+      availability: "Direct Dispatch",
       color: "from-amber-500/10 to-orange-500/10 text-amber-600",
     },
     {
       title: "Plumber",
-      description: "Pipes, emergency leak sealing, and bathroom installation",
+      description: "Pipes, emergency leak sealing, water tank overhaul, and sanitary installation",
       icon: Wrench,
-      badge: "Instant Dispatch",
-      count: "240+ Online",
+      badge: "Emergency Fix",
+      availability: "On-Call Nearby",
       color: "from-blue-500/10 to-cyan-500/10 text-blue-600",
     },
     {
       title: "Carpenter",
-      description: "Custom furniture crafting, doors, and woodwork repair",
+      description: "Custom furniture crafting, door locks, hinges, and precision woodwork repair",
       icon: Hammer,
-      badge: "Verified Pros",
-      count: "180+ Online",
+      badge: "Verified Skills",
+      availability: "Active Category",
       color: "from-emerald-500/10 to-teal-500/10 text-emerald-600",
     },
     {
       title: "Painter",
-      description: "Interior wall design, exterior coating, and commercial painting",
+      description: "Interior wall emulsion, exterior protective coating, waterproofing, and finish",
       icon: Paintbrush,
       badge: "AI Matched",
-      count: "210+ Online",
+      availability: "Direct Dispatch",
       color: "from-purple-500/10 to-pink-500/10 text-purple-600",
     },
     {
       title: "AC Repair",
-      description: "HVAC cooling setup, gas refilling, and filter servicing",
+      description: "HVAC cooling setup, compressor servicing, refrigerant refilling, and duct cleaning",
       icon: Snowflake,
-      badge: "Express Fix",
-      count: "190+ Online",
+      badge: "Certified Techs",
+      availability: "On-Call Nearby",
       color: "from-sky-500/10 to-blue-500/10 text-sky-600",
     },
     {
       title: "Cleaning",
-      description: "Deep home sanitation, office cleaning, and carpet wash",
+      description: "Deep home sanitation, commercial office cleaning, and upholstery sanitization",
       icon: Sparkles,
       badge: "Eco-Friendly",
-      count: "290+ Online",
+      availability: "Active Category",
       color: "from-teal-500/10 to-emerald-500/10 text-teal-600",
     },
     {
       title: "Mechanic",
-      description: "Automobile diagnostics, breakdown assistance, and tune-ups",
+      description: "Automobile diagnostics, breakdown assistance, battery jump-starts, and tune-ups",
       icon: Car,
-      badge: "Mobile Units",
-      count: "150+ Online",
+      badge: "Mobile Dispatch",
+      availability: "Emergency Unit",
       color: "from-rose-500/10 to-red-500/10 text-rose-600",
     },
     {
       title: "Construction",
-      description: "Structural masons, renovation experts, and building pros",
+      description: "Structural masonry, renovation specialists, tiling, and licensed builders",
       icon: HardHat,
       badge: "Licensed Teams",
-      count: "110+ Online",
+      availability: "Active Category",
       color: "from-indigo-500/10 to-violet-500/10 text-indigo-600",
     },
   ];
@@ -102,11 +102,11 @@ export default function RoleCards() {
           </div>
 
           <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-            Explore Verified <span className="text-blue-600">Services</span>
+            Explore Verified <span className="text-blue-600">Specializations</span>
           </h2>
 
           <p className="mt-4 text-lg text-slate-600 leading-relaxed">
-            Discover verified professionals across popular industries. Every provider undergoes background checks and AI skill verification.
+            Discover verified professionals across essential industries. Every provider undergoes background checks and AI skill classification.
           </p>
         </div>
 
@@ -143,11 +143,11 @@ export default function RoleCards() {
                   </p>
                 </div>
 
-                {/* Footer Action Link */}
+                {/* Footer Action Link with Honest Availability Status */}
                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1">
+                  <span className="text-[11px] font-medium text-slate-500 flex items-center gap-1">
                     <ShieldCheck size={13} className="text-emerald-500" />
-                    {service.count}
+                    {service.availability}
                   </span>
 
                   <span className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 transition-all duration-200 group-hover:translate-x-1">
@@ -166,7 +166,7 @@ export default function RoleCards() {
             onClick={() => navigate("/services/search")}
             className="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-8 py-4 text-sm font-bold text-slate-800 shadow-sm transition hover:border-blue-600 hover:text-blue-600 hover:shadow-md active:scale-95 cursor-pointer"
           >
-            <span>Explore All 50+ Skilled Service Categories</span>
+            <span>Explore All Skilled Service Categories</span>
             <ArrowRight size={16} />
           </button>
         </div>
