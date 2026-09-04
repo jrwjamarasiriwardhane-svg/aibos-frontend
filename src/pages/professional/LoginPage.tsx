@@ -55,6 +55,10 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
+        if (data.requiresEmailVerification) {
+          navigate(`/verify-email?email=${encodeURIComponent(formData.email)}&role=professional`);
+          return;
+        }
         throw new Error(
           data.message || "Login failed"
         );

@@ -38,7 +38,8 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const apiUrl = "http://localhost:5000/api";
+      const apiUrl =
+        import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
       const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
@@ -51,6 +52,10 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
+        if (data.requiresEmailVerification) {
+          navigate(`/verify-email?email=${encodeURIComponent(formData.email)}&role=customer`);
+          return;
+        }
         throw new Error(data.message || "Login failed");
       }
 
@@ -199,9 +204,17 @@ export default function LoginPage() {
             {error && (
               <div
                 role="alert"
-                className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+                className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 space-y-2"
               >
-                {error}
+                <p>{error}</p>
+                {error.toLowerCase().includes("verify") && (
+                  <Link
+                    to={`/verify-email?email=${encodeURIComponent(formData.email)}&role=customer`}
+                    className="inline-block font-semibold text-blue-600 hover:text-blue-700 underline text-xs"
+                  >
+                    Click here to enter verification code or resend email →
+                  </Link>
+                )}
               </div>
             )}
 
