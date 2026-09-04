@@ -91,10 +91,20 @@ export default function Hero() {
                     onChange={(e) => setLocation(e.target.value)}
                     className="w-full bg-transparent text-sm font-semibold text-slate-200 outline-none cursor-pointer"
                   >
-                    <option value="Mumbai" className="bg-slate-900 text-white">Mumbai</option>
-                    <option value="Delhi" className="bg-slate-900 text-white">Delhi</option>
-                    <option value="Bangalore" className="bg-slate-900 text-white">Bangalore</option>
-                    <option value="Colombo" className="bg-slate-900 text-white">Colombo</option>
+                    <option value="Colombo" className="bg-slate-900 text-white">🇱🇰 Colombo, LK</option>
+                    <option value="Kandy" className="bg-slate-900 text-white">🇱🇰 Kandy, LK</option>
+                    <option value="Galle" className="bg-slate-900 text-white">🇱🇰 Galle, LK</option>
+                    <option value="Ambalangoda" className="bg-slate-900 text-white">🇱🇰 Ambalangoda, LK</option>
+                    <option value="Mumbai" className="bg-slate-900 text-white">🇮🇳 Mumbai, IN</option>
+                    <option value="Delhi" className="bg-slate-900 text-white">🇮🇳 New Delhi, IN</option>
+                    <option value="Bangalore" className="bg-slate-900 text-white">🇮🇳 Bengaluru, IN</option>
+                    <option value="Dubai" className="bg-slate-900 text-white">🇦🇪 Dubai, UAE</option>
+                    <option value="Singapore" className="bg-slate-900 text-white">🇸🇬 Singapore, SG</option>
+                    <option value="London" className="bg-slate-900 text-white">🇬🇧 London, UK</option>
+                    <option value="Frankfurt" className="bg-slate-900 text-white">🇩🇪 Frankfurt, DE</option>
+                    <option value="Tokyo" className="bg-slate-900 text-white">🇯🇵 Tokyo, JP</option>
+                    <option value="Sydney" className="bg-slate-900 text-white">🇦🇺 Sydney, AU</option>
+                    <option value="New York" className="bg-slate-900 text-white">🇺🇸 New York, US</option>
                   </select>
                 </div>
 

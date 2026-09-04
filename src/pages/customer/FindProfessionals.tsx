@@ -26,6 +26,62 @@ interface ProfessionalItem {
 
 const SAMPLE_PROFESSIONALS: ProfessionalItem[] = [
   {
+    id: "p-sl-1",
+    name: "Kasun Jayawardena",
+    category: "Electrical",
+    rating: 4.9,
+    reviewsCount: 168,
+    experienceYears: 7,
+    hourlyRate: 1500,
+    location: "Ambalangoda",
+    skills: ["Solar Wiring", "Three-Phase Power", "Main Breaker Repair", "Inverter Setup"],
+    isVerified: true,
+    avatarText: "KJ",
+    bio: "NVQ Level 4 certified master electrician in Ambalangoda & Southern Province with 7+ years expertise in residential solar and emergency line repairs.",
+  },
+  {
+    id: "p-sl-2",
+    name: "Dilan Perera",
+    category: "Plumbing",
+    rating: 4.9,
+    reviewsCount: 124,
+    experienceYears: 8,
+    hourlyRate: 1200,
+    location: "Colombo",
+    skills: ["Pipe Leakage", "Pressure Pumps", "Overhead Tank Setup", "Hot Water Lines"],
+    isVerified: true,
+    avatarText: "DP",
+    bio: "Licensed master plumber across Western Province handling high-rise plumbing, drainage clearings, and instant bathroom fittings.",
+  },
+  {
+    id: "p-sl-3",
+    name: "Nuwan Samarasinghe",
+    category: "AC & Cooling",
+    rating: 4.8,
+    reviewsCount: 95,
+    experienceYears: 6,
+    hourlyRate: 1800,
+    location: "Galle",
+    skills: ["Inverter AC", "Gas Topup", "Compressor Servicing", "Duct Cleaning"],
+    isVerified: true,
+    avatarText: "NS",
+    bio: "Certified refrigeration & air conditioning technician servicing Galle Fort, Southern coast, and villas.",
+  },
+  {
+    id: "p-sl-4",
+    name: "Chaminda Silva",
+    category: "Carpentry",
+    rating: 5.0,
+    reviewsCount: 82,
+    experienceYears: 10,
+    hourlyRate: 1400,
+    location: "Kandy",
+    skills: ["Teak Woodwork", "Roof Trusses", "Modular Cabinets", "Antique Restoration"],
+    isVerified: true,
+    avatarText: "CS",
+    bio: "Traditional wood master and modern interior cabinetry specialist with over a decade of verified craftsmanship.",
+  },
+  {
     id: "p1",
     name: "Rohan Sharma",
     category: "Electrical",
@@ -97,17 +153,17 @@ const SAMPLE_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     id: "p6",
-    name: "Manoj Rathod",
-    category: "Cleaning",
-    rating: 4.9,
-    reviewsCount: 89,
-    experienceYears: 4,
-    hourlyRate: 250,
-    location: "Colombo",
-    skills: ["Deep Sanitization", "Sofa Shampooing", "Kitchen Degreasing", "Move-in Clean"],
+    name: "Tariq Al-Mansoor",
+    category: "Smart Home & Electrical",
+    rating: 5.0,
+    reviewsCount: 119,
+    experienceYears: 8,
+    hourlyRate: 120,
+    location: "Dubai",
+    skills: ["KNX Automation", "Smart Lighting", "EV Chargers", "CCTV Integration"],
     isVerified: true,
-    avatarText: "MR",
-    bio: "Professional deep cleaning team lead using industrial grade sanitizers and fabric extractors for sparkling clean spaces.",
+    avatarText: "TM",
+    bio: "Dubai-certified master smart home systems technician specializing in IoT automation and high-efficiency power panels.",
   },
 ];
 
@@ -250,10 +306,18 @@ export default function FindProfessionals() {
                 className="w-full appearance-none rounded-2xl border border-white/10 bg-slate-900/90 py-3 pl-10 pr-8 text-sm text-white outline-none focus:border-blue-400"
               >
                 <option value="All Locations">All Locations</option>
-                <option value="Mumbai">Mumbai</option>
-                <option value="Delhi">Delhi</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Colombo">Colombo</option>
+                <option value="Ambalangoda">🇱🇰 Ambalangoda</option>
+                <option value="Colombo">🇱🇰 Colombo</option>
+                <option value="Kandy">🇱🇰 Kandy</option>
+                <option value="Galle">🇱🇰 Galle</option>
+                <option value="Mumbai">🇮🇳 Mumbai</option>
+                <option value="Delhi">🇮🇳 Delhi</option>
+                <option value="Bangalore">🇮🇳 Bangalore</option>
+                <option value="Dubai">🇦🇪 Dubai</option>
+                <option value="London">🇬🇧 London</option>
+                <option value="Frankfurt">🇩🇪 Frankfurt</option>
+                <option value="Singapore">🇸🇬 Singapore</option>
+                <option value="Tokyo">🇯🇵 Tokyo</option>
               </select>
             </div>
 
