@@ -171,26 +171,34 @@ export default function WorkerNetworkGlobe() {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let width = (canvas.width = canvas.parentElement?.clientWidth || 460);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 460);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    const updateDimensions = () => {
+      if (!canvas.parentElement) return;
+      const clientW = canvas.parentElement.clientWidth || 360;
+      const clientH = canvas.parentElement.clientHeight || 360;
+      
+      canvas.width = clientW * dpr;
+      canvas.height = clientH * dpr;
+      ctx.scale(dpr, dpr);
+    };
+
+    updateDimensions();
 
     const handleResize = () => {
-      if (!canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.clientWidth || 460;
-      height = canvas.height = canvas.parentElement.clientHeight || 460;
+      updateDimensions();
     };
     window.addEventListener("resize", handleResize);
 
     const continentDots = generateContinentPoints();
-    const globeRadius = Math.min(width, height) * 0.36;
 
     // Background cosmic particles
     const spaceParticles: { x: number; y: number; size: number; speed: number; opacity: number }[] = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 40; i++) {
       spaceParticles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 1.6 + 0.4,
+        x: Math.random() * 500,
+        y: Math.random() * 500,
+        size: Math.random() * 1.5 + 0.4,
         speed: Math.random() * 0.2 + 0.05,
         opacity: Math.random() * 0.6 + 0.2,
       });
@@ -200,6 +208,11 @@ export default function WorkerNetworkGlobe() {
     let photonOffset = 0;
 
     const render = () => {
+      const parent = canvas.parentElement;
+      const width = parent?.clientWidth || 360;
+      const height = parent?.clientHeight || 360;
+      const globeRadius = Math.min(width, height) * (width < 420 ? 0.34 : 0.36);
+
       ctx.clearRect(0, 0, width, height);
       pulseTimer += 0.035;
       photonOffset = (photonOffset + 0.012) % 1;
@@ -228,7 +241,7 @@ export default function WorkerNetworkGlobe() {
         p.y -= p.speed;
         if (p.y < 0) p.y = height;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.arc((p.x % width), p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(148, 163, 184, ${p.opacity * 0.35})`;
         ctx.fill();
       });
@@ -361,7 +374,7 @@ export default function WorkerNetworkGlobe() {
         if (p.visible && p.z > 0) {
           const depthAlpha = Math.max(0.1, (p.z / globeRadius));
           ctx.beginPath();
-          ctx.arc(p.screenX, p.screenY, 1.2, 0, Math.PI * 2);
+          ctx.arc(p.screenX, p.screenY, width < 420 ? 1.0 : 1.2, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(103, 232, 249, ${depthAlpha * 0.45})`;
           ctx.fill();
         }
@@ -391,7 +404,7 @@ export default function WorkerNetworkGlobe() {
         });
       });
 
-      // 8. Draw High-Speed Laser Connection Arcs Between Nodes
+      // 8. Draw Laser Connection Arcs Between Nodes
       for (let i = 0; i < renderedNodes.length; i++) {
         for (let j = i + 1; j < renderedNodes.length; j++) {
           const a = renderedNodes[i];
@@ -401,7 +414,6 @@ export default function WorkerNetworkGlobe() {
             if (dist < globeRadius * 1.15) {
               const alpha = Math.max(0, 1 - dist / (globeRadius * 1.15)) * 0.4;
               
-              // Arc curve calculation
               const midX = (a.screenX + b.screenX) / 2 + (centerX - (a.screenX + b.screenX) / 2) * 0.1;
               const midY = (a.screenY + b.screenY) / 2 - 20;
 
@@ -418,10 +430,10 @@ export default function WorkerNetworkGlobe() {
               const py = (1 - t) * (1 - t) * a.screenY + 2 * (1 - t) * t * midY + t * t * b.screenY;
 
               ctx.beginPath();
-              ctx.arc(px, py, 2, 0, Math.PI * 2);
+              ctx.arc(px, py, width < 420 ? 1.5 : 2, 0, Math.PI * 2);
               ctx.fillStyle = "#38bdf8";
               ctx.shadowColor = "#38bdf8";
-              ctx.shadowBlur = 8;
+              ctx.shadowBlur = 6;
               ctx.fill();
               ctx.shadowBlur = 0;
             }
@@ -435,13 +447,13 @@ export default function WorkerNetworkGlobe() {
 
         const isHighlighted = selectedCountry === node.country;
         const pulse = Math.sin(pulseTimer * 2 + node.lat) * (isHighlighted ? 4 : 2);
-        const nodeSize = (isHighlighted ? 5.5 : 4) * node.depthScale;
+        const nodeSize = (isHighlighted ? 5 : 3.8) * node.depthScale;
 
         // Outer radar ping ring
         ctx.beginPath();
-        ctx.arc(node.screenX, node.screenY, (10 + pulse) * node.depthScale, 0, Math.PI * 2);
+        ctx.arc(node.screenX, node.screenY, (9 + pulse) * node.depthScale, 0, Math.PI * 2);
         ctx.strokeStyle = isHighlighted ? "#38bdf8" : node.color;
-        ctx.lineWidth = isHighlighted ? 1.6 : 1;
+        ctx.lineWidth = isHighlighted ? 1.5 : 1;
         ctx.globalAlpha = (isHighlighted ? 0.8 : 0.4) * node.depthScale;
         ctx.stroke();
         ctx.globalAlpha = 1;
@@ -451,18 +463,19 @@ export default function WorkerNetworkGlobe() {
         ctx.arc(node.screenX, node.screenY, nodeSize, 0, Math.PI * 2);
         ctx.fillStyle = isHighlighted ? "#ffffff" : node.color;
         ctx.shadowColor = node.color;
-        ctx.shadowBlur = isHighlighted ? 16 : 8;
+        ctx.shadowBlur = isHighlighted ? 14 : 6;
         ctx.fill();
         ctx.shadowBlur = 0;
 
         // City & Role Label on Front Face
         if (node.z > globeRadius * 0.25 || isHighlighted) {
-          ctx.font = `${isHighlighted ? "bold 11px" : "10px"} system-ui, sans-serif`;
+          const fontSize = width < 420 ? (isHighlighted ? "10px" : "9px") : (isHighlighted ? "11px" : "10px");
+          ctx.font = `${isHighlighted ? "bold " : ""}${fontSize} system-ui, sans-serif`;
           ctx.fillStyle = isHighlighted ? "#ffffff" : "rgba(226, 232, 240, 0.85)";
           ctx.textAlign = "left";
           ctx.fillText(
             `${node.flag} ${node.city}`,
-            node.screenX + 9 * node.depthScale,
+            node.screenX + 8 * node.depthScale,
             node.screenY + 3
           );
         }
@@ -480,13 +493,16 @@ export default function WorkerNetworkGlobe() {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
+      const parent = canvas.parentElement;
+      const width = parent?.clientWidth || 360;
+      const height = parent?.clientHeight || 360;
+      const globeRadius = Math.min(width, height) * (width < 420 ? 0.34 : 0.36);
+
       if (!isDraggingRef.current) {
-        // Check hover over rendered nodes
         const rect = canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
 
-        // Find closest visible node
         const rotY = rotYRef.current;
         const rotX = rotXRef.current;
         const cosY = Math.cos(rotY);
@@ -527,7 +543,7 @@ export default function WorkerNetworkGlobe() {
       isDraggingRef.current = false;
     };
 
-    // Touch support
+    // Touch support for phone & tablet
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 1) {
         isDraggingRef.current = true;
@@ -574,56 +590,56 @@ export default function WorkerNetworkGlobe() {
   const activeCountryNodes = WORLD_NODES.filter((n) => n.country === selectedCountry);
 
   return (
-    <div className="relative w-full max-w-xl mx-auto flex flex-col items-center justify-center select-none">
+    <div className="relative w-full max-w-full sm:max-w-lg lg:max-w-xl mx-auto flex flex-col items-center justify-center select-none px-1 sm:px-0">
       {/* HUD Decorative Outer Corner Brackets & Cyber Glass Frame */}
-      <div className="pointer-events-none absolute -inset-3 rounded-3xl border border-cyan-500/25 bg-slate-950/60 backdrop-blur-xl shadow-[0_0_50px_rgba(6,182,212,0.15)]">
-        <div className="absolute -top-1 -left-1 h-3.5 w-3.5 border-t-2 border-l-2 border-cyan-400" />
-        <div className="absolute -top-1 -right-1 h-3.5 w-3.5 border-t-2 border-r-2 border-cyan-400" />
-        <div className="absolute -bottom-1 -left-1 h-3.5 w-3.5 border-b-2 border-l-2 border-cyan-400" />
-        <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 border-b-2 border-r-2 border-cyan-400" />
+      <div className="pointer-events-none absolute -inset-2 sm:-inset-3 rounded-2xl sm:rounded-3xl border border-cyan-500/25 bg-slate-950/60 backdrop-blur-xl shadow-[0_0_50px_rgba(6,182,212,0.15)]">
+        <div className="absolute -top-1 -left-1 h-3 w-3 sm:h-3.5 sm:w-3.5 border-t-2 border-l-2 border-cyan-400" />
+        <div className="absolute -top-1 -right-1 h-3 w-3 sm:h-3.5 sm:w-3.5 border-t-2 border-r-2 border-cyan-400" />
+        <div className="absolute -bottom-1 -left-1 h-3 w-3 sm:h-3.5 sm:w-3.5 border-b-2 border-l-2 border-cyan-400" />
+        <div className="absolute -bottom-1 -right-1 h-3 w-3 sm:h-3.5 sm:w-3.5 border-b-2 border-r-2 border-cyan-400" />
       </div>
 
       {/* Top HUD Telemetry Status Header */}
-      <div className="relative z-10 w-full flex items-center justify-between px-5 pt-4 pb-2.5 border-b border-slate-800/80 text-xs">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
+      <div className="relative z-10 w-full flex items-center justify-between px-3 sm:px-5 pt-3 sm:pt-4 pb-2 border-b border-slate-800/80 text-xs">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+            <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-emerald-500" />
           </span>
-          <span className="font-mono text-[11px] uppercase tracking-wider text-slate-200 font-bold flex items-center gap-1.5">
-            <GlobeIcon size={14} className="text-cyan-400" />
-            Global AI Satellite Mesh
+          <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-200 font-bold flex items-center gap-1 sm:gap-1.5">
+            <GlobeIcon size={13} className="text-cyan-400 shrink-0" />
+            <span className="truncate">Global Satellite Mesh</span>
           </span>
         </div>
 
         {/* Controls: Auto-spin toggle & Satellite Lock */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => setIsAutoSpin(!isAutoSpin)}
-            className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono border transition ${
+            className={`flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono border transition ${
               isAutoSpin
                 ? "bg-cyan-950/70 border-cyan-500/40 text-cyan-300"
                 : "bg-slate-800 border-slate-700 text-slate-400"
             }`}
             title="Toggle Earth Auto-Rotation"
           >
-            <RotateCw size={10} className={isAutoSpin ? "animate-spin" : ""} />
-            <span>{isAutoSpin ? "ORBIT ACTIVE" : "MANUAL DRAG"}</span>
+            <RotateCw size={10} className={isAutoSpin ? "animate-spin shrink-0" : "shrink-0"} />
+            <span>{isAutoSpin ? "ORBIT" : "DRAG"}</span>
           </button>
 
-          <div className="hidden sm:flex items-center gap-1 font-mono text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-            <Radio size={11} className="animate-pulse text-emerald-400" />
+          <div className="hidden xs:flex items-center gap-1 font-mono text-[9px] sm:text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+            <Radio size={10} className="animate-pulse text-emerald-400" />
             <span>GPS LOCK</span>
           </div>
         </div>
       </div>
 
       {/* Country Quick Select Explorer Bar */}
-      <div className="relative z-10 w-full px-3 pt-2.5 pb-1 flex items-center gap-1.5 overflow-x-auto no-scrollbar mask-fade-edges">
-        <div className="text-[10px] font-mono text-slate-400 px-1 font-bold shrink-0 flex items-center gap-1">
-          <Navigation size={11} className="text-cyan-400" />
-          FOCUS:
+      <div className="relative z-10 w-full px-2 sm:px-3 pt-2 pb-1 flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar scroll-smooth">
+        <div className="text-[9px] sm:text-[10px] font-mono text-slate-400 px-1 font-bold shrink-0 flex items-center gap-1">
+          <Navigation size={10} className="text-cyan-400" />
+          <span className="hidden xs:inline">FOCUS:</span>
         </div>
         {COUNTRY_LIST.map((c) => {
           const isSelected = selectedCountry === c.name;
@@ -632,7 +648,7 @@ export default function WorkerNetworkGlobe() {
               key={c.code}
               type="button"
               onClick={() => focusOnCountry(c.name)}
-              className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition cursor-pointer border ${
+              className={`shrink-0 flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-semibold transition cursor-pointer border ${
                 isSelected
                   ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)] scale-105"
                   : "bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700 hover:text-white"
@@ -646,73 +662,73 @@ export default function WorkerNetworkGlobe() {
       </div>
 
       {/* Canvas 3D Visualization Area */}
-      <div className="relative w-full h-[360px] sm:h-[400px] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing">
+      <div className="relative w-full h-[280px] xs:h-[320px] sm:h-[360px] md:h-[380px] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y">
         <canvas ref={canvasRef} className="w-full h-full block" />
 
         {/* Hover Tooltip / Selected Country Floating HUD Telemetry */}
         {activeHoverNode ? (
-          <div className="absolute top-4 left-4 bg-slate-900/95 border border-cyan-500/50 rounded-2xl p-3 backdrop-blur-xl shadow-2xl animate-fade-in pointer-events-none z-20 max-w-xs">
-            <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-1.5 mb-1.5">
-              <span className="text-xs font-bold text-white flex items-center gap-1">
+          <div className="absolute top-3 left-3 right-3 sm:right-auto bg-slate-900/95 border border-cyan-500/50 rounded-2xl p-2.5 sm:p-3 backdrop-blur-xl shadow-2xl animate-fade-in pointer-events-none z-20 max-w-xs">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-1 mb-1">
+              <span className="text-[11px] sm:text-xs font-bold text-white flex items-center gap-1 truncate">
                 <span>{activeHoverNode.flag}</span>
-                <span>{activeHoverNode.city}, {activeHoverNode.country}</span>
+                <span className="truncate">{activeHoverNode.city}, {activeHoverNode.country}</span>
               </span>
-              <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
+              <span className="text-[9px] sm:text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded-full border border-emerald-500/30 shrink-0">
                 ★ {activeHoverNode.rating}
               </span>
             </div>
-            <p className="text-xs font-bold text-cyan-300">{activeHoverNode.role}</p>
-            <p className="text-[11px] text-slate-400 font-mono mt-0.5 flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
+            <p className="text-xs font-bold text-cyan-300 truncate">{activeHoverNode.role}</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 font-mono mt-0.5 flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
               Status: {activeHoverNode.status.toUpperCase()}
             </p>
           </div>
         ) : (
           /* Live Focus Country Stats Card */
-          <div className="absolute bottom-3 left-3 right-3 bg-slate-900/90 border border-slate-800/90 rounded-2xl p-3 backdrop-blur-xl shadow-xl flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                <Zap size={18} />
+          <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-3 sm:left-3 sm:right-3 bg-slate-900/90 border border-slate-800/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-3 backdrop-blur-xl shadow-xl flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+              <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
+                <Zap size={16} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-white">
+                  <span className="text-xs sm:text-xs font-bold text-white truncate">
                     {selectedCountry} Regional Mesh
                   </span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" />
                 </div>
-                <p className="text-[11px] text-slate-400 font-mono">
-                  {activeCountryNodes.length} Verified Hubs Active &bull; Avg Dispatch &lt; 15 mins
+                <p className="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">
+                  {activeCountryNodes.length} Hubs Active &bull; Dispatch &lt; 15m
                 </p>
               </div>
             </div>
 
-            <div className="hidden sm:flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2.5 py-1 rounded-xl">
-              <ShieldCheck size={13} />
-              <span>Verified ID</span>
+            <div className="hidden sm:flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl shrink-0">
+              <ShieldCheck size={12} />
+              <span>Verified</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Bottom Capability Indicators */}
-      <div className="relative z-10 w-full grid grid-cols-3 gap-2 px-4 py-2.5 border-t border-slate-800/80 bg-slate-950/80 rounded-b-2xl text-center">
-        <div className="px-1 py-1">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">Mesh Coverage</p>
-          <p className="text-xs font-bold text-cyan-300 mt-0.5 flex items-center justify-center gap-1">
-            <Sparkles size={12} /> Global Lat/Lng
+      <div className="relative z-10 w-full grid grid-cols-3 gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 border-t border-slate-800/80 bg-slate-950/80 rounded-b-xl sm:rounded-b-2xl text-center">
+        <div className="px-0.5 sm:px-1 py-1">
+          <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold truncate">Coverage</p>
+          <p className="text-[11px] sm:text-xs font-bold text-cyan-300 mt-0.5 flex items-center justify-center gap-1">
+            <Sparkles size={11} className="shrink-0" /> <span className="truncate">Global Lat/Lng</span>
           </p>
         </div>
-        <div className="px-1 py-1 border-x border-slate-800">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">Verification</p>
-          <p className="text-xs font-bold text-emerald-300 mt-0.5 flex items-center justify-center gap-1">
-            <CheckCircle2 size={12} /> Gov ID & Skills
+        <div className="px-0.5 sm:px-1 py-1 border-x border-slate-800">
+          <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold truncate">Verified</p>
+          <p className="text-[11px] sm:text-xs font-bold text-emerald-300 mt-0.5 flex items-center justify-center gap-1">
+            <CheckCircle2 size={11} className="shrink-0" /> <span className="truncate">Gov ID & Skills</span>
           </p>
         </div>
-        <div className="px-1 py-1">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">Proximity Lock</p>
-          <p className="text-xs font-bold text-blue-300 mt-0.5 flex items-center justify-center gap-1">
-            <MapPin size={12} /> Instant Dispatch
+        <div className="px-0.5 sm:px-1 py-1">
+          <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold truncate">Dispatch</p>
+          <p className="text-[11px] sm:text-xs font-bold text-blue-300 mt-0.5 flex items-center justify-center gap-1">
+            <MapPin size={11} className="shrink-0" /> <span className="truncate">Instant GPS</span>
           </p>
         </div>
       </div>
