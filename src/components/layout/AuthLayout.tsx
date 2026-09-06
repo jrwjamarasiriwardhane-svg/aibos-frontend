@@ -20,7 +20,7 @@ export default function AuthLayout(props: AuthLayoutProps) {
   } = props;
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-[#060913]">
       <div className="grid min-h-screen lg:grid-cols-2">
         {/* Left Side */}
         <div

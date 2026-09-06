@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import {
   Search,
@@ -189,11 +189,7 @@ export default function FindProfessionals() {
   const [selectedLocation, setSelectedLocation] = useState(queryLocation);
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
 
-  useEffect(() => {
-    if (searchParams.get("category")) {
-      setSelectedCategory(searchParams.get("category") || "All Services");
-    }
-  }, [searchParams]);
+
 
   // Filter professionals
   const filteredProfessionals = SAMPLE_PROFESSIONALS.filter((item) => {

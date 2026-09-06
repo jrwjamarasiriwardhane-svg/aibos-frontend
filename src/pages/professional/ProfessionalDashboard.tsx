@@ -104,28 +104,62 @@ export default function ProfessionalDashboard() {
   // USER
   // ====================================================
 
-  const storedUser =
-    localStorage.getItem("user");
-
-  let user: {
+  const [user, setUser] = useState<{
+    id?: string;
+    _id?: string;
     fullName?: string;
     email?: string;
     role?: string;
-  } = {};
+    profileImage?: string;
+  }>(() => {
+    try {
+      const stored = localStorage.getItem("user");
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  });
 
-  try {
-    user = storedUser
-      ? JSON.parse(storedUser)
-      : {};
-  } catch {
-    user = {};
-  }
+  const [avatarError, setAvatarError] = useState(false);
+
+  useEffect(() => {
+    const handleProfileUpdate = () => {
+      try {
+        const stored = localStorage.getItem("user");
+        if (stored) {
+          setUser(JSON.parse(stored));
+          setAvatarError(false);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    window.addEventListener("userProfileUpdated", handleProfileUpdate);
+    return () => {
+      window.removeEventListener("userProfileUpdated", handleProfileUpdate);
+    };
+  }, []);
 
   const userName =
     user.fullName || "Professional";
 
   const firstName =
     userName.split(" ")[0];
+
+  const userId = user.id || user._id;
+  const API_BASE_URL =
+    (import.meta as any).env?.VITE_API_BASE_URL ||
+    (import.meta as any).env?.VITE_API_URL?.replace(/\/api$/, "") ||
+    "http://localhost:5000";
+
+  const displayAvatar = user.profileImage
+    ? user.profileImage.startsWith("blob:") || user.profileImage.startsWith("http") || user.profileImage.startsWith("data:")
+      ? user.profileImage
+      : `${API_BASE_URL}${user.profileImage}`
+    : userId
+    ? `${API_BASE_URL}/api/users/profile-image/${userId}`
+    : null;
 
   // ====================================================
   // LOGOUT
@@ -585,27 +619,35 @@ export default function ProfessionalDashboard() {
 
             <div className="hidden h-8 w-px bg-slate-200 sm:block" />
 
-            <div className="flex items-center gap-3">
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
-                {userName
-                  .charAt(0)
-                  .toUpperCase()}
+            <Link
+              to="/professional/profile"
+              className="flex items-center gap-3 rounded-xl p-1.5 transition hover:bg-slate-50 group"
+              title="View & Edit Profile"
+            >
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-slate-100 shadow-xs">
+                {displayAvatar && !avatarError ? (
+                  <img
+                    src={displayAvatar}
+                    alt={userName}
+                    className="h-full w-full object-cover transition group-hover:scale-105"
+                    onError={() => setAvatarError(true)}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-blue-100 font-bold text-blue-700">
+                    {userName.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
 
-              <div className="hidden sm:block">
-
-                <p className="text-sm font-semibold text-slate-900">
+              <div className="hidden sm:block text-left">
+                <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-600 transition">
                   {userName}
                 </p>
-
                 <p className="text-xs text-slate-500">
                   Professional
                 </p>
-
               </div>
-
-            </div>
+            </Link>
 
           </div>
 

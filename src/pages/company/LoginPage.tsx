@@ -46,7 +46,15 @@ export default function CompanyLoginPage() {
 
       const data = await response.json();
 
+      // #region agent log
+      fetch('http://127.0.0.1:7468/ingest/40b9b3d1-81e1-44a0-9a4c-9da7cea37d4d',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c1632a'},body:JSON.stringify({sessionId:'c1632a',runId:'post-fix',hypothesisId:'D',location:'company/LoginPage.tsx:handleSubmit',message:'company login response',data:{ok:response.ok,status:response.status,requiresEmailVerification:Boolean(data.requiresEmailVerification),willRedirectToVerify:Boolean(!response.ok && data.requiresEmailVerification),role:data.user?.role||null,message:data.message,pathname:window.location.pathname},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+
       if (!response.ok) {
+        if (data.requiresEmailVerification) {
+          navigate(`/verify-email?email=${encodeURIComponent(formData.email)}&role=company`);
+          return;
+        }
         throw new Error(data.message || "Company login failed");
       }
 
@@ -140,9 +148,17 @@ export default function CompanyLoginPage() {
             {error && (
               <div
                 role="alert"
-                className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+                className="mb-5 space-y-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
               >
-                {error}
+                <p>{error}</p>
+                {error.toLowerCase().includes("verify") && (
+                  <Link
+                    to={`/verify-email?email=${encodeURIComponent(formData.email)}&role=company`}
+                    className="inline-block font-semibold text-blue-600 hover:text-blue-700 underline text-xs"
+                  >
+                    Enter verification code or resend email →
+                  </Link>
+                )}
               </div>
             )}
 

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "./styles/theme.css"; // global theme import
 
 import AiChatWidget from "./components/ai/AiChatWidget";
 
@@ -30,6 +31,7 @@ import CompanyDashBoard from "./pages/company/CompanyDashBoard";
 function App() {
   return (
     <BrowserRouter>
+      <div className="glass min-h-screen p-4">
       <Routes>
         <Route path="/" element={<HomePage />} />
 
@@ -59,6 +61,11 @@ function App() {
         <Route
           path="/admin/login"
           element={<AdminLogin />}
+        />
+
+        <Route
+          path="/admin/verify-email"
+          element={<VerifyEmailPage />}
         />
 
         <Route
@@ -248,6 +255,7 @@ function App() {
       ============================== */}
 
       <AiChatWidget />
+    </div>
     </BrowserRouter>
   );
 }

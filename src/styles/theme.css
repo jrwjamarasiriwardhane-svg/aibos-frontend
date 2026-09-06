@@ -1,0 +1,30 @@
+/* Global dark theme with glassmorphism and neon accents */
+:root {
+  --bg-primary: rgba(10,10,15,0.85);
+  --bg-glass: rgba(255,255,255,0.08);
+  --color-primary: hsl(210, 100%, 55%);
+  --color-neon: hsl(280, 100%, 70%);
+  --color-accent: hsl(150, 80%, 60%);
+  --font-base: 'Inter', sans-serif;
+  --transition: 0.3s ease;
+}
+
+body {
+  background: var(--bg-primary);
+  color: #fff;
+  font-family: var(--font-base);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.glass {
+  backdrop-filter: blur(12px);
+  background: var(--bg-glass);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.neon {
+  color: var(--color-neon);
+  text-shadow: 0 0 6px var(--color-neon), 0 0 12px var(--color-neon);
+}

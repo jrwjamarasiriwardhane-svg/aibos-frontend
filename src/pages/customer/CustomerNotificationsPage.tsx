@@ -12,22 +12,25 @@ interface Notification {
 
 export default function CustomerNotificationsPage() {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      _id: "1",
-      title: "Welcome to AIBOS",
-      message: "Your customer workspace is active. Create your first service request anytime!",
-      isRead: true,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      _id: "2",
-      title: "AI Matching Ready",
-      message: "Our AI matching engine is analyzing top verified professionals for your location.",
-      isRead: false,
-      createdAt: new Date(Date.now() - 3600000).toISOString(),
-    },
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>(() => {
+    const now = Date.now();
+    return [
+      {
+        _id: "1",
+        title: "Welcome to AIBOS",
+        message: "Your customer workspace is active. Create your first service request anytime!",
+        isRead: true,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        _id: "2",
+        title: "AI Matching Ready",
+        message: "Our AI matching engine is analyzing top verified professionals for your location.",
+        isRead: false,
+        createdAt: new Date(now - 3600000).toISOString(),
+      },
+    ];
+  });
   const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");

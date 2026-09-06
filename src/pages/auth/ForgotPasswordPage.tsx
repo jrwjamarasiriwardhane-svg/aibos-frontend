@@ -23,7 +23,14 @@ export default function ForgotPasswordPage() {
         body: JSON.stringify({ email }),
       }).catch(() => null);
 
-      if (response && !response.ok) {
+      // If the backend is unreachable, simulate a successful request for demo purposes
+      if (!response) {
+        console.warn("Forgot password request: backend unreachable, using fallback.");
+        setSubmitted(true);
+        return;
+      }
+
+      if (!response.ok) {
         const data = await response.json().catch(() => ({}));
         throw new Error(data.message || "Failed to process request");
       }
@@ -32,7 +39,8 @@ export default function ForgotPasswordPage() {
     } catch (err: any) {
       // In case server doesn't have an endpoint yet or fails, provide a smooth fallback user experience
       console.warn("Forgot password request notice:", err);
-      setSubmitted(true);
+      // Show an error message to the user instead of silently succeeding
+      setError("Unable to send reset instructions. Please try again later.");
     } finally {
       setLoading(false);
     }

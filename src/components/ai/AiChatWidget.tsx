@@ -69,6 +69,7 @@ export default function AiChatWidget() {
     "/company/login",
     "/company/register",
     "/admin/login",
+    "/admin/verify-email",
     "/verify-email",
     "/auth/verify-email",
     "/forgot-password",

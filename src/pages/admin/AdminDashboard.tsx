@@ -225,13 +225,13 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#060913]">
 
       {/* ==================================================
           HEADER
       ================================================== */}
 
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+      <header className="sticky top-0 z-30 border-b border-cyan-400/15 bg-[#060913]/90 backdrop-blur-xl">
 
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
 
@@ -239,16 +239,16 @@ export default function AdminDashboard() {
 
           <div className="flex items-center gap-3">
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.25)]">
               <ShieldCheck size={21} />
             </div>
 
             <div>
-              <h1 className="font-bold text-slate-900">
+              <h1 className="font-bold text-white">
                 AIBOS Admin
               </h1>
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-400">
                 Administration Portal
               </p>
             </div>
@@ -261,7 +261,7 @@ export default function AdminDashboard() {
 
             <div className="hidden text-right sm:block">
 
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-white">
                 {user.fullName || "Admin"}
               </p>
 
@@ -273,7 +273,7 @@ export default function AdminDashboard() {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+              className="flex items-center gap-2 rounded-xl border border-cyan-400/20 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-cyan-500/10"
             >
               <LogOut size={16} />
               Logout
@@ -295,11 +295,11 @@ export default function AdminDashboard() {
 
         <div>
 
-          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
+          <p className="text-sm font-semibold uppercase tracking-wide text-cyan-400">
             ADMINISTRATION
           </p>
 
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">
+          <h2 className="mt-2 text-3xl font-bold text-white">
             Dashboard
           </h2>
 

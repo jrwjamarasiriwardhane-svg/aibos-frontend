@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -20,17 +20,38 @@ export default function Hero() {
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("Mumbai");
   const [isSearching, setIsSearching] = useState(false);
+  
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSearch = () => {
-    if (!search.trim()) return;
+  // Clean up navigation timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const executeSearch = (query: string, loc: string) => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) return;
+
     setIsSearching(true);
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       navigate(
         `/services/search?q=${encodeURIComponent(
-          search
-        )}&location=${encodeURIComponent(location)}`
+          trimmedQuery
+        )}&location=${encodeURIComponent(loc)}`
       );
     }, 400);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    executeSearch(search, location);
+  };
+
+  const handleChipClick = (value: string) => {
+    setSearch(value);
+    executeSearch(value, location);
   };
 
   return (
@@ -80,7 +101,10 @@ export default function Hero() {
             </p>
 
             {/* HUD COMMAND SEARCH BAR */}
-            <div className="w-full max-w-2xl rounded-2xl sm:rounded-3xl border border-cyan-500/25 bg-slate-950/80 p-2 sm:p-3 shadow-2xl backdrop-blur-xl ring-1 ring-white/10">
+            <form
+              onSubmit={handleFormSubmit}
+              className="w-full max-w-2xl rounded-2xl sm:rounded-3xl border border-cyan-500/25 bg-slate-950/80 p-2 sm:p-3 shadow-2xl backdrop-blur-xl ring-1 ring-white/10"
+            >
               <div className="flex flex-col gap-2 md:flex-row md:items-center">
 
                 {/* Location Selector */}
@@ -89,6 +113,7 @@ export default function Hero() {
                   <select
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
+                    aria-label="Select location"
                     className="w-full bg-transparent text-xs sm:text-sm font-semibold text-slate-200 outline-none cursor-pointer"
                   >
                     <option value="Colombo" className="bg-slate-900 text-white">🇱🇰 Colombo, LK</option>
@@ -115,9 +140,6 @@ export default function Hero() {
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleSearch();
-                    }}
                     placeholder={t("hero.searchPlaceholder") || "What service do you need? (e.g. Electrician)"}
                     className="w-full bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-500 outline-none font-medium"
                   />
@@ -125,8 +147,7 @@ export default function Hero() {
 
                 {/* Match AI Action Button */}
                 <button
-                  type="button"
-                  onClick={handleSearch}
+                  type="submit"
                   disabled={isSearching || !search.trim()}
                   className="flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-600 to-indigo-600 px-6 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-cyan-600/25 transition duration-200 hover:from-blue-500 hover:to-cyan-500 hover:shadow-cyan-500/40 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 cursor-pointer active:scale-95"
                 >
@@ -144,7 +165,7 @@ export default function Hero() {
                 </button>
 
               </div>
-            </div>
+            </form>
 
             {/* Quick Search Service Chips */}
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs text-slate-400">
@@ -161,7 +182,7 @@ export default function Hero() {
                 <button
                   key={item.value}
                   type="button"
-                  onClick={() => setSearch(item.value)}
+                  onClick={() => handleChipClick(item.value)}
                   className="rounded-full border border-slate-800 bg-slate-900/80 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-slate-300 transition hover:border-cyan-400 hover:text-white hover:bg-cyan-950/30 cursor-pointer text-[11px] sm:text-xs"
                 >
                   {item.label}

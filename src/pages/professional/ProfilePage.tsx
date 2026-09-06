@@ -9,6 +9,7 @@ import {
   Briefcase,
   ArrowLeft,
 } from "lucide-react";
+import ProfessionalAccountOverview from "./components/ProfessionalAccountOverview";
 
 interface ProfessionalProfile {
   bio: string;
@@ -37,8 +38,17 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch {
+      return {};
+    }
+  });
 
   const [profile, setProfile] =
     useState<ProfessionalProfile>({
@@ -64,6 +74,91 @@ export default function ProfilePage() {
   const apiUrl =
     import.meta.env.VITE_API_URL ||
     "http://localhost:5000/api";
+
+  // ======================================================
+  // HANDLE PROFILE IMAGE UPLOAD & DELETE
+  // ======================================================
+
+  const handleImageChange = async (file: File) => {
+    try {
+      setUploadingImage(true);
+      setError("");
+      setMessage("");
+
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      const response = await fetch(`${apiUrl}/users/profile-image`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to upload photo");
+      }
+
+      if (data.user) {
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      } else {
+        const previewUrl = URL.createObjectURL(file);
+        const updated = { ...user, profileImage: previewUrl };
+        setUser(updated);
+        localStorage.setItem("user", JSON.stringify(updated));
+      }
+
+      window.dispatchEvent(new Event("userProfileUpdated"));
+      setMessage("Profile photo updated successfully!");
+      setTimeout(() => setMessage(""), 4000);
+    } catch (err) {
+      console.error("PHOTO UPLOAD ERROR:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to upload profile photo"
+      );
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleImageDelete = async () => {
+    try {
+      setUploadingImage(true);
+      setError("");
+      setMessage("");
+
+      const response = await fetch(`${apiUrl}/users/profile-image`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete photo");
+      }
+
+      const updated = { ...user, profileImage: "" };
+      setUser(updated);
+      localStorage.setItem("user", JSON.stringify(updated));
+      window.dispatchEvent(new Event("userProfileUpdated"));
+      setMessage("Profile photo removed.");
+      setTimeout(() => setMessage(""), 4000);
+    } catch (err) {
+      console.error("PHOTO DELETE ERROR:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to remove profile photo"
+      );
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   // ======================================================
   // LOAD PROFILE
@@ -233,6 +328,15 @@ export default function ProfilePage() {
             {error}
           </div>
         )}
+
+        {/* Account Overview with Photo Upload */}
+        <ProfessionalAccountOverview
+          user={user}
+          onImageChange={handleImageChange}
+          onImageDelete={handleImageDelete}
+          uploading={uploadingImage}
+          isVerified={profile.verificationStatus === "verified" || (profile.identityVerified && profile.skillsVerified)}
+        />
 
         <div className="grid gap-8 lg:grid-cols-3">
 

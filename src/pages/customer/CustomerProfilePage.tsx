@@ -19,26 +19,67 @@ export default function CustomerProfilePage() {
   const [email] = useState(user.email || "");
   const [message, setMessage] = useState("");
 
+  const apiUrl =
+    (import.meta as any).env?.VITE_API_URL || "http://localhost:5000/api";
+  const token = localStorage.getItem("token");
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     const updated = { ...user, fullName, phone };
     setUser(updated);
     localStorage.setItem("user", JSON.stringify(updated));
+    window.dispatchEvent(new Event("userProfileUpdated"));
     setMessage("Profile details saved successfully!");
     setTimeout(() => setMessage(""), 3000);
   };
 
-  const handleImageChange = (file: File) => {
-    const previewUrl = URL.createObjectURL(file);
-    const updatedUser = { ...user, profileImage: previewUrl };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+  const handleImageChange = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      const res = await fetch(`${apiUrl}/users/profile-image`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.user) {
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      } else {
+        const previewUrl = URL.createObjectURL(file);
+        const updatedUser = { ...user, profileImage: previewUrl };
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      }
+    } catch {
+      const previewUrl = URL.createObjectURL(file);
+      const updatedUser = { ...user, profileImage: previewUrl };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+    window.dispatchEvent(new Event("userProfileUpdated"));
   };
 
-  const handleImageDelete = () => {
+  const handleImageDelete = async () => {
+    try {
+      await fetch(`${apiUrl}/users/profile-image`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch {
+      // ignore
+    }
     const updatedUser = { ...user, profileImage: "" };
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
+    window.dispatchEvent(new Event("userProfileUpdated"));
   };
 
   return (
