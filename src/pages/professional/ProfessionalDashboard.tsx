@@ -26,8 +26,21 @@ import {
   RefreshCw,
 } from "lucide-react";
 
+import { useTranslation } from "react-i18next";
 import HudStatCard from "../../components/dashboard/HudStatCard";
 import RadarEmptyState from "../../components/dashboard/RadarEmptyState";
+import LanguageSelector from "../../components/common/LanguageSelector";
+
+// ======================================================
+// HELPERS
+// ======================================================
+
+function getGreeting(t: (key: string) => string) {
+  const h = new Date().getHours();
+  if (h < 12) return t("dashboard.goodMorning");
+  if (h < 17) return t("dashboard.goodAfternoon");
+  return t("dashboard.goodEvening");
+}
 
 // ======================================================
 // TYPES
@@ -73,6 +86,7 @@ interface ServiceRequest {
 
 export default function ProfessionalDashboard() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // ====================================================
   // SIDEBAR
@@ -501,7 +515,7 @@ export default function ProfessionalDashboard() {
             icon={
               <Briefcase size={19} />
             }
-            label="Dashboard"
+            label={t("dashboard.dashboard")}
             to="/professional/dashboard"
             active
           />
@@ -510,7 +524,7 @@ export default function ProfessionalDashboard() {
             icon={
               <Search size={19} />
             }
-            label="Find Jobs"
+            label={t("dashboard.findProfessionals")}
             to="/professional/jobs"
           />
 
@@ -534,7 +548,7 @@ export default function ProfessionalDashboard() {
             icon={
               <Bell size={19} />
             }
-            label="Notifications"
+            label={t("dashboard.notifications")}
             to="/professional/notifications"
           />
 
@@ -542,7 +556,7 @@ export default function ProfessionalDashboard() {
             icon={
               <User size={19} />
             }
-            label="My Profile"
+            label={t("dashboard.profile")}
             to="/professional/profile"
           />
 
@@ -556,16 +570,16 @@ export default function ProfessionalDashboard() {
             icon={
               <Settings size={19} />
             }
-            label="Settings"
+            label={t("dashboard.settings")}
             to="/professional/settings"
           />
 
           <button
             type="button"
             onClick={handleLogout}
-            className="mt-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50"
+            className="mt-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50 cursor-pointer"
           >
-            Logout
+            {t("dashboard.logout")}
           </button>
 
         </div>
@@ -597,7 +611,7 @@ export default function ProfessionalDashboard() {
           <div className="hidden lg:block">
 
             <p className="text-sm text-slate-500">
-              Professional Workspace
+              {t("dashboard.professionalWorkspace")}
             </p>
 
             <p className="font-semibold text-slate-900">
@@ -607,6 +621,9 @@ export default function ProfessionalDashboard() {
           </div>
 
           <div className="flex items-center gap-4">
+
+            {/* Language Selector */}
+            <LanguageSelector />
 
             <button
               type="button"
@@ -666,11 +683,11 @@ export default function ProfessionalDashboard() {
           <section className="mb-8">
 
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-              Professional Dashboard
+              {t("dashboard.professionalWorkspace")}
             </p>
 
             <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
-              Good morning, {firstName} 👋
+              {getGreeting(t)}, {firstName} 👋
             </h1>
 
             <p className="mt-2 text-slate-500">
@@ -688,7 +705,7 @@ export default function ProfessionalDashboard() {
           <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
             <HudStatCard
-              label="Available Requests"
+              label={t("dashboard.availableJobs")}
               value={serviceRequests.length}
               icon={Briefcase}
               color="cyan"
@@ -696,7 +713,7 @@ export default function ProfessionalDashboard() {
             />
 
             <HudStatCard
-              label="Active Work"
+              label={t("dashboard.activeJobs")}
               value={0}
               icon={CheckCircle2}
               color="emerald"
@@ -704,16 +721,16 @@ export default function ProfessionalDashboard() {
             />
 
             <HudStatCard
-              label="Total Earnings"
+              label={t("dashboard.earnings")}
               value={0}
               icon={DollarSign}
               color="blue"
-              suffix=" (₹)"
+              suffix=" (LKR)"
               subtext="From completed service work"
             />
 
             <HudStatCard
-              label="Verified Rating"
+              label={t("dashboard.rating")}
               value={0}
               icon={Star}
               color="amber"

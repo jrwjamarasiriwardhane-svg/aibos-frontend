@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
   Search,
@@ -24,6 +25,7 @@ export default function CustomerSidebar({
 }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const handleNav = (path: string) => {
     navigate(path);
@@ -71,21 +73,21 @@ export default function CustomerSidebar({
         {/* NAV */}
         <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
           <NavButton
-            label="Dashboard"
+            label={t("dashboard.dashboard")}
             icon={<LayoutDashboard size={18} />}
             active={location.pathname === "/customer/dashboard"}
             onClick={() => handleNav("/customer/dashboard")}
           />
 
           <NavButton
-            label="Find Professionals"
+            label={t("dashboard.findProfessionals")}
             icon={<Search size={18} />}
             active={location.pathname === "/services/search" || location.pathname === "/professionals"}
             onClick={() => handleNav("/services/search")}
           />
 
           <NavButton
-            label="My Requests"
+            label={t("dashboard.myRequests")}
             icon={<Clock3 size={18} />}
             badge={activeRequests}
             active={location.pathname === "/customer/dashboard"}
@@ -93,14 +95,14 @@ export default function CustomerSidebar({
           />
 
           <NavButton
-            label="Notifications"
+            label={t("dashboard.notifications")}
             icon={<Bell size={18} />}
             active={location.pathname === "/customer/notifications"}
             onClick={() => handleNav("/customer/notifications")}
           />
 
           <NavButton
-            label="My Profile"
+            label={t("dashboard.profile")}
             icon={<User size={18} />}
             active={location.pathname === "/customer/profile"}
             onClick={() => handleNav("/customer/profile")}
@@ -112,10 +114,10 @@ export default function CustomerSidebar({
           <button
             type="button"
             onClick={onLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50 cursor-pointer"
           >
             <LogOut size={18} />
-            <span>Logout</span>
+            <span>{t("dashboard.logout")}</span>
           </button>
         </div>
       </aside>

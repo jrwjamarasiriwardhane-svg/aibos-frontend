@@ -26,10 +26,12 @@ import {
   UserCheck,
 } from "lucide-react";
 
+import { useTranslation } from "react-i18next";
 import AccountOverview from "./components/AccountOverview";
 import CustomerSidebar from "./components/CustomerSidebar";
 import CustomerRequestList from "./components/CustomerRequestList";
 import NotificationBell from "../../components/notifications/NotificationBell";
+import LanguageSelector from "../../components/common/LanguageSelector";
 import HudStatCard from "../../components/dashboard/HudStatCard";
 import RadarEmptyState from "../../components/dashboard/RadarEmptyState";
 
@@ -50,11 +52,11 @@ interface CustomerUser {
 // ─────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────
-function getGreeting() {
+function getGreeting(t: (key: string) => string) {
   const h = new Date().getHours();
-  if (h < 12) return "Good morning";
-  if (h < 17) return "Good afternoon";
-  return "Good evening";
+  if (h < 12) return t("dashboard.goodMorning");
+  if (h < 17) return t("dashboard.goodAfternoon");
+  return t("dashboard.goodEvening");
 }
 
 // ─────────────────────────────────────────────
@@ -148,6 +150,7 @@ function Skeleton({ className = "" }: { className?: string }) {
 // ─────────────────────────────────────────────
 export default function CustomerDashboard() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // ── State ──────────────────────────────────
@@ -302,7 +305,7 @@ export default function CustomerDashboard() {
               </div>
               <div className="hidden sm:block">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600">
-                  Customer Workspace
+                  {t("dashboard.customerWorkspace")}
                 </p>
                 <p className="text-sm font-black leading-none text-slate-900">AIBOS</p>
               </div>
@@ -318,7 +321,7 @@ export default function CustomerDashboard() {
                 <input
                   ref={searchRef}
                   type="text"
-                  placeholder="Search requests, services…"
+                  placeholder={t("dashboard.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-4 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
@@ -345,7 +348,7 @@ export default function CustomerDashboard() {
                   }`}
               >
                 {isOnline ? <Wifi size={11} /> : <WifiOff size={11} />}
-                {isOnline ? "Live" : "Offline"}
+                {isOnline ? t("dashboard.live") : t("dashboard.offline")}
               </span>
 
               {/* Silent refresh */}
@@ -354,13 +357,16 @@ export default function CustomerDashboard() {
                 onClick={() => loadRequests(true)}
                 disabled={refreshing}
                 className="rounded-xl p-2 text-slate-500 hover:bg-slate-100 disabled:opacity-50"
-                title="Refresh"
+                title={t("dashboard.refresh")}
               >
                 <RefreshCw
                   size={16}
                   className={refreshing ? "animate-spin" : ""}
                 />
               </button>
+
+              {/* Language Selector */}
+              <LanguageSelector />
 
               {/* Notifications */}
               <NotificationBell />
@@ -423,7 +429,7 @@ export default function CustomerDashboard() {
                   </span>
 
                   <h2 className="mt-5 text-3xl font-black tracking-tight sm:text-5xl text-white">
-                    {getGreeting()},{" "}
+                    {getGreeting(t)},{" "}
                     <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-200 bg-clip-text text-transparent">
                       {firstName}
                     </span>{" "}
@@ -442,14 +448,14 @@ export default function CustomerDashboard() {
                       className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-cyan-500/25 transition hover:from-cyan-400 hover:to-blue-500 hover:shadow-cyan-400/40 active:scale-95"
                     >
                       <Plus size={16} />
-                      New Service Request
+                      {t("dashboard.newRequest")}
                     </button>
                     <button
                       type="button"
                       onClick={() => navigate("/services/search")}
                       className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur transition hover:border-cyan-400 hover:text-white"
                     >
-                      Find Specialists
+                      {t("dashboard.findProfessionals")}
                       <ArrowRight size={15} />
                     </button>
                   </div>
@@ -458,9 +464,9 @@ export default function CustomerDashboard() {
                 {/* Right micro-telemetry (xl only) */}
                 <div className="hidden flex-col gap-3 xl:flex">
                   {[
-                    { label: "Active In Mesh", val: activeRequests, color: "text-cyan-400" },
-                    { label: "Completed", val: completedServices, color: "text-emerald-400" },
-                    { label: "Total Handled", val: totalRequests, color: "text-blue-400" },
+                    { label: t("dashboard.activeRequests"), val: activeRequests, color: "text-cyan-400" },
+                    { label: t("dashboard.completedServices"), val: completedServices, color: "text-emerald-400" },
+                    { label: t("dashboard.totalRequests"), val: totalRequests, color: "text-blue-400" },
                   ].map(({ label, val, color }) => (
                     <div
                       key={label}
@@ -487,28 +493,28 @@ export default function CustomerDashboard() {
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               <HudStatCard
-                label="Active Requests"
+                label={t("dashboard.activeRequests")}
                 value={activeRequests}
                 icon={Activity}
                 color="cyan"
                 subtext={activeRequests > 0 ? "Currently in dispatch mesh" : "No ongoing requests"}
               />
               <HudStatCard
-                label="Completed Services"
+                label={t("dashboard.completedServices")}
                 value={completedServices}
                 icon={CheckCircle2}
                 color="emerald"
                 subtext={`${completedServices} verified completions`}
               />
               <HudStatCard
-                label="Total Requests"
+                label={t("dashboard.totalRequests")}
                 value={totalRequests}
                 icon={ListTodo}
                 color="blue"
                 subtext="All-time customer requests"
               />
               <HudStatCard
-                label="Dispatch Score"
+                label={t("dashboard.satisfactionScore")}
                 value={satisfactionScore}
                 icon={Star}
                 color="amber"
