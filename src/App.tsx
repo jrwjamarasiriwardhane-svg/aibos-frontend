@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./styles/theme.css"; // global theme import
 
@@ -29,9 +30,16 @@ import CompanyRegister from "./pages/company/RegisterPage";
 import CompanyDashBoard from "./pages/company/CompanyDashBoard";
 
 function App() {
+  useEffect(() => {
+    // Silent pre-warm ping for Render backend to prevent cold start delays
+    const apiUrl = import.meta.env.VITE_API_URL || "https://aibos-backend-k8ch.onrender.com/api";
+    const rootUrl = apiUrl.replace(/\/api\/?$/, "");
+    fetch(`${rootUrl}/`, { method: "GET" }).catch(() => {});
+  }, []);
+
   return (
     <BrowserRouter>
-      <div className="glass min-h-screen p-4">
+      <div className="min-h-screen flex flex-col bg-[#060913] text-slate-100 selection:bg-cyan-500 selection:text-slate-950">
       <Routes>
         <Route path="/" element={<HomePage />} />
 

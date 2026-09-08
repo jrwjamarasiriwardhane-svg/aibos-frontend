@@ -52,8 +52,13 @@ export default function FuturisticAuthShell({
           </p>
         </div>
 
-        <div className="flex items-center justify-center px-6 py-12">
-          <div className="w-full max-w-md rounded-3xl border border-cyan-400/20 bg-slate-950/75 p-8 shadow-[0_0_60px_rgba(34,211,238,0.12)] backdrop-blur-xl sm:p-10">
+        <div className="flex items-center justify-center px-4 py-8 sm:px-6 sm:py-12">
+          <div className="w-full max-w-md rounded-3xl border border-cyan-400/20 bg-slate-950/75 p-6 shadow-[0_0_60px_rgba(34,211,238,0.12)] backdrop-blur-xl sm:p-10">
+            <div className="mb-6 flex justify-center lg:hidden">
+              <Link to="/" className="text-2xl font-extrabold tracking-tight text-white hover:text-cyan-300 transition-colors">
+                AIBOS
+              </Link>
+            </div>
             {children}
           </div>
         </div>

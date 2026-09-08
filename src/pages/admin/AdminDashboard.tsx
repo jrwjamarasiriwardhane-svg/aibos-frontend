@@ -233,7 +233,7 @@ export default function AdminDashboard() {
 
       <header className="sticky top-0 z-30 border-b border-cyan-400/15 bg-[#060913]/90 backdrop-blur-xl">
 
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
 
           {/* BRAND */}
 
@@ -244,11 +244,11 @@ export default function AdminDashboard() {
             </div>
 
             <div>
-              <h1 className="font-bold text-white">
+              <h1 className="font-bold text-white text-sm sm:text-base">
                 AIBOS Admin
               </h1>
 
-              <p className="text-xs text-slate-400">
+              <p className="text-[11px] sm:text-xs text-slate-400">
                 Administration Portal
               </p>
             </div>
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
 
           {/* USER */}
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
 
             <div className="hidden text-right sm:block">
 
@@ -273,10 +273,10 @@ export default function AdminDashboard() {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 rounded-xl border border-cyan-400/20 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-cyan-500/10"
+              className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-cyan-400/20 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-200 transition hover:bg-cyan-500/10 cursor-pointer"
             >
-              <LogOut size={16} />
-              Logout
+              <LogOut size={15} />
+              <span>Logout</span>
             </button>
 
           </div>
@@ -289,7 +289,7 @@ export default function AdminDashboard() {
           MAIN
       ================================================== */}
 
-      <main className="mx-auto max-w-7xl px-6 py-10">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-10">
 
         {/* PAGE TITLE */}
 
@@ -558,7 +558,7 @@ export default function AdminDashboard() {
 
                         {/* DETAILS */}
 
-                        <div className="grid gap-4 sm:grid-cols-3 lg:min-w-[450px]">
+                        <div className="grid gap-4 sm:grid-cols-3 flex-1">
 
                           <div>
 

@@ -204,7 +204,7 @@ export default function Features() {
           </p>
 
           {/* Role Tabs */}
-          <div className="mt-8 inline-flex items-center gap-1 rounded-2xl border border-slate-800 bg-slate-950/80 p-1.5 backdrop-blur-md">
+          <div className="mt-8 flex flex-wrap justify-center sm:inline-flex items-center gap-1.5 rounded-2xl border border-slate-800 bg-slate-950/80 p-1.5 backdrop-blur-md max-w-full">
             {tabs.map((tab) => {
               const TabIcon = tab.icon;
               return (
@@ -212,7 +212,7 @@ export default function Features() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     activeTab === tab.id
                       ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-600/20"
                       : "text-slate-400 hover:text-slate-200"

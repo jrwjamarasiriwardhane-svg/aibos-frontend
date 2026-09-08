@@ -259,7 +259,7 @@ export default function VerifyEmailPage() {
       </div>
 
       {/* Main Card Container */}
-      <div className="w-full max-w-lg bg-slate-950/75 rounded-3xl border border-cyan-400/20 shadow-[0_0_60px_rgba(34,211,238,0.12)] p-8 sm:p-10 relative z-10 backdrop-blur-xl">
+      <div className="w-full max-w-lg bg-slate-950/75 rounded-3xl border border-cyan-400/20 shadow-[0_0_60px_rgba(34,211,238,0.12)] p-5 sm:p-10 relative z-10 backdrop-blur-xl">
         
         {/* State 1: Verifying URL token spinner */}
         {verifyingToken ? (
@@ -360,7 +360,7 @@ export default function VerifyEmailPage() {
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3 text-center">
                   6-Digit Security Code
                 </label>
-                <div className="flex justify-between items-center gap-2 sm:gap-3">
+                <div className="flex justify-between items-center gap-1.5 sm:gap-3">
                   {otp.map((digit, idx) => (
                     <input
                       key={idx}
@@ -372,10 +372,10 @@ export default function VerifyEmailPage() {
                       onChange={(e) => handleOtpChange(idx, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(idx, e)}
                       onPaste={handlePaste}
-                      className={`w-11 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-bold rounded-2xl border transition-all duration-200 outline-none ${
+                      className={`w-10 h-13 sm:w-14 sm:h-16 text-center text-lg sm:text-2xl font-bold rounded-xl sm:rounded-2xl border transition-all duration-200 outline-none ${
                         digit
-                          ? "border-cyan-400 bg-cyan-500/10 text-cyan-100 ring-4 ring-cyan-500/15"
-                          : "border-cyan-400/20 bg-slate-900 text-white focus:border-cyan-400 focus:ring-4 focus:ring-cyan-500/20"
+                          ? "border-cyan-400 bg-cyan-500/10 text-cyan-100 ring-2 sm:ring-4 ring-cyan-500/15"
+                          : "border-cyan-400/20 bg-slate-900 text-white focus:border-cyan-400 focus:ring-2 sm:focus:ring-4 focus:ring-cyan-500/20"
                       }`}
                     />
                   ))}

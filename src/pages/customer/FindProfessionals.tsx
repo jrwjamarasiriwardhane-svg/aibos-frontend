@@ -229,28 +229,28 @@ export default function FindProfessionals() {
     <div className="min-h-screen bg-slate-50">
       {/* HEADER */}
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="text-xl font-bold text-slate-900">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <Link to="/" className="text-xl font-bold text-slate-900 shrink-0">
               AIBOS
             </Link>
             <span className="text-slate-300">/</span>
-            <p className="text-sm font-semibold text-slate-600">
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 truncate">
               Find Professionals
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={() => navigate("/customer/dashboard")}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 transition hover:bg-slate-50 cursor-pointer"
             >
-              <ArrowLeft size={16} />
-              Dashboard
+              <ArrowLeft size={15} />
+              <span className="hidden xs:inline">Dashboard</span>
             </button>
             <button
               onClick={() => navigate("/request-service")}
-              className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              className="rounded-xl bg-blue-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 cursor-pointer whitespace-nowrap"
             >
               + Request Service
             </button>
@@ -259,9 +259,9 @@ export default function FindProfessionals() {
       </header>
 
       {/* MAIN */}
-      <main className="mx-auto max-w-7xl px-6 py-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
         {/* INTRO HERO */}
-        <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 p-8 text-white shadow-xl sm:p-10">
+        <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 p-6 sm:p-10 text-white shadow-xl">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-300">
               <Sparkles size={14} />

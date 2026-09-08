@@ -367,13 +367,13 @@ export default function AiChatWidget() {
         /* FAB Button */
         .ai-chat-fab {
           position: fixed;
-          bottom: 28px;
-          right: 28px;
+          bottom: 24px;
+          right: 24px;
           z-index: 9999;
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 14px 20px;
+          padding: 13px 18px;
           background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
           color: white;
           border: none;
@@ -406,11 +406,12 @@ export default function AiChatWidget() {
         /* Chat Window */
         .ai-chat-window {
           position: fixed;
-          bottom: 28px;
-          right: 28px;
+          bottom: 24px;
+          right: 24px;
           z-index: 9999;
           width: 380px;
           max-width: calc(100vw - 32px);
+          max-height: calc(100vh - 48px);
           background: #fff;
           border-radius: 20px;
           box-shadow: 0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(37,99,235,0.12);
@@ -426,6 +427,27 @@ export default function AiChatWidget() {
         }
         .ai-chat-minimized {
           height: auto !important;
+        }
+
+        @media (max-width: 640px) {
+          .ai-chat-fab {
+            bottom: 16px;
+            right: 16px;
+            padding: 11px 15px;
+            font-size: 13px;
+          }
+          .ai-chat-window {
+            bottom: 10px;
+            right: 10px;
+            left: 10px;
+            width: auto;
+            max-width: calc(100vw - 20px);
+            max-height: calc(100vh - 20px);
+            border-radius: 16px;
+          }
+          .ai-chat-body {
+            max-height: calc(100vh - 160px) !important;
+          }
         }
 
         /* Header */

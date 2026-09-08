@@ -128,7 +128,7 @@ export default function RegisterPage() {
       );
 
       setTimeout(() => {
-        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}&role=customer`);
       }, 1200);
     } catch (err) {
       setError(

@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import type { FormEvent } from "react";
-
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
 import {
-  createServiceRequest,
-} from "./services/serviceRequestService";
+  ArrowLeft,
+  CheckCircle2,
+  AlertCircle,
+  Sparkles,
+  MapPin,
+  Calendar,
+  Clock,
+  DollarSign,
+  Loader2,
+  Wrench,
+} from "lucide-react";
+import { createServiceRequest } from "./services/serviceRequestService";
 
 const RequestService: React.FC = () => {
   const navigate = useNavigate();
@@ -26,10 +34,7 @@ const RequestService: React.FC = () => {
   // =====================================================
   // SUBMIT REQUEST
   // =====================================================
-
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setError("");
@@ -41,9 +46,7 @@ const RequestService: React.FC = () => {
     }
 
     if (!category || !description || !location) {
-      setError(
-        "Please fill in category, description and location."
-      );
+      setError("Please fill in category, description and location.");
       return;
     }
 
@@ -54,17 +57,12 @@ const RequestService: React.FC = () => {
         category,
         description,
         location,
-        preferredDate:
-          preferredDate || null,
+        preferredDate: preferredDate || null,
         preferredTime,
-        budget: budget
-          ? Number(budget)
-          : 0,
+        budget: budget ? Number(budget) : 0,
       });
 
-      setSuccess(
-        "Service request created successfully!"
-      );
+      setSuccess("Service request created successfully!");
 
       // Clear form
       setCategory("");
@@ -79,445 +77,222 @@ const RequestService: React.FC = () => {
         navigate("/customer/dashboard");
       }, 1000);
     } catch (err: any) {
-      console.error(
-        "CREATE SERVICE REQUEST ERROR:",
-        err
-      );
-
-      setError(
-        err?.message ||
-          "Unable to create service request."
-      );
+      console.error("CREATE SERVICE REQUEST ERROR:", err);
+      setError(err?.message || "Unable to create service request.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f8fafc",
-        padding: "40px 20px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "760px",
-          margin: "0 auto",
-        }}
-      >
-        {/* ================================================= */}
-        {/* HEADER */}
-        {/* ================================================= */}
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <Link to="/" className="text-xl font-extrabold text-slate-900 tracking-tight">
+              AIBOS
+            </Link>
+            <span className="text-slate-300">/</span>
+            <span className="text-sm font-semibold text-slate-600">New Request</span>
+          </div>
 
-        <div
-          style={{
-            marginBottom: "28px",
-          }}
-        >
           <button
             type="button"
-            onClick={() =>
-              navigate("/customer/dashboard")
-            }
-            style={{
-              border: "none",
-              background: "transparent",
-              color: "#2563eb",
-              cursor: "pointer",
-              fontWeight: 600,
-              padding: 0,
-              marginBottom: "18px",
-            }}
+            onClick={() => navigate("/customer/dashboard")}
+            className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 transition hover:text-blue-700"
           >
-            ← Back to Dashboard
+            <ArrowLeft size={16} />
+            <span>Dashboard</span>
           </button>
+        </div>
+      </header>
 
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "32px",
-              color: "#0f172a",
-            }}
-          >
-            Request a Service
+      {/* Main Container */}
+      <main className="mx-auto max-w-3xl px-4 sm:px-6 py-6 sm:py-10">
+        {/* Intro */}
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 mb-3">
+            <Sparkles size={14} className="text-blue-600" />
+            AI Service Dispatch
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Request a Verified Service
           </h1>
-
-          <p
-            style={{
-              marginTop: "8px",
-              color: "#64748b",
-              fontSize: "16px",
-            }}
-          >
-            Tell us what service you need and AIBOS
-            will help connect you with suitable
-            professionals.
+          <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">
+            Tell us what service you need and AIBOS will dispatch certified nearby specialists.
           </p>
         </div>
 
-        {/* ================================================= */}
-        {/* FORM CARD */}
-        {/* ================================================= */}
-
+        {/* Form Card */}
         <form
           onSubmit={handleSubmit}
-          style={{
-            background: "#ffffff",
-            border: "1px solid #e2e8f0",
-            borderRadius: "18px",
-            padding: "32px",
-            boxShadow:
-              "0 4px 12px rgba(15, 23, 42, 0.05)",
-          }}
+          className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-8 shadow-sm space-y-5"
         >
-          {/* ERROR */}
-
+          {/* Error Banner */}
           {error && (
             <div
-              style={{
-                background: "#fef2f2",
-                border: "1px solid #fecaca",
-                color: "#dc2626",
-                padding: "14px 16px",
-                borderRadius: "10px",
-                marginBottom: "22px",
-              }}
+              role="alert"
+              className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
             >
-              {error}
+              <AlertCircle size={18} className="shrink-0 mt-0.5 text-red-500" />
+              <div>
+                <p className="font-semibold text-xs sm:text-sm">{error}</p>
+              </div>
             </div>
           )}
 
-          {/* SUCCESS */}
-
+          {/* Success Banner */}
           {success && (
             <div
-              style={{
-                background: "#ecfdf5",
-                border: "1px solid #bbf7d0",
-                color: "#15803d",
-                padding: "14px 16px",
-                borderRadius: "10px",
-                marginBottom: "22px",
-              }}
+              role="status"
+              className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700"
             >
-              {success}
+              <CheckCircle2 size={18} className="shrink-0 mt-0.5 text-emerald-500" />
+              <div>
+                <p className="font-semibold text-xs sm:text-sm">{success}</p>
+                <p className="text-xs text-emerald-600 mt-0.5">Redirecting to your dashboard...</p>
+              </div>
             </div>
           )}
 
-          {/* ================================================= */}
-          {/* CATEGORY */}
-          {/* ================================================= */}
-
-          <div
-            style={{
-              marginBottom: "20px",
-            }}
-          >
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: 600,
-                color: "#334155",
-              }}
-            >
-              Service Category *
+          {/* Category */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+              Service Category <span className="text-rose-500">*</span>
             </label>
-
-            <select
-              value={category}
-              onChange={(e) =>
-                setCategory(e.target.value)
-              }
-              required
-              style={{
-                width: "100%",
-                padding: "13px 14px",
-                borderRadius: "10px",
-                border: "1px solid #cbd5e1",
-                fontSize: "15px",
-                background: "#ffffff",
-              }}
-            >
-              <option value="">
-                Select a service
-              </option>
-
-              <option value="Electrician">
-                Electrician
-              </option>
-
-              <option value="AC Repair">
-                AC Repair
-              </option>
-
-              <option value="Plumber">
-                Plumber
-              </option>
-
-              <option value="Carpenter">
-                Carpenter
-              </option>
-
-              <option value="Mason">
-                Mason
-              </option>
-
-              <option value="Painter">
-                Painter
-              </option>
-
-              <option value="Mechanic">
-                Mechanic
-              </option>
-
-              <option value="Cleaning">
-                Cleaning
-              </option>
-
-              <option value="Restaurant Helper">
-                Restaurant Helper
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
-            </select>
+            <div className="relative">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+                className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-4 pr-10 text-sm font-medium text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+              >
+                <option value="">Select a service category</option>
+                <option value="Electrician">⚡ Electrician (Wiring, Inverter, Panels)</option>
+                <option value="AC Repair">❄️ AC Repair (Cooling, Gas, Servicing)</option>
+                <option value="Plumber">🔧 Plumber (Pipes, Leakage, Pumps)</option>
+                <option value="Carpenter">🪚 Carpenter (Woodwork, Furniture, Locks)</option>
+                <option value="Painter">🎨 Painter (Interior, Exterior, Waterproof)</option>
+                <option value="Mason">🧱 Mason (Construction, Tiling, Structural)</option>
+                <option value="Mechanic">🚗 Mechanic (Auto Diagnostics, Breakdown)</option>
+                <option value="Cleaning">✨ Cleaning (Home, Commercial, Deep)</option>
+                <option value="Restaurant Helper">🍽️ Restaurant Helper</option>
+                <option value="Other">🛠️ Other Skilled Work</option>
+              </select>
+              <Wrench size={16} className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            </div>
           </div>
 
-          {/* ================================================= */}
-          {/* DESCRIPTION */}
-          {/* ================================================= */}
-
-          <div
-            style={{
-              marginBottom: "20px",
-            }}
-          >
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: 600,
-                color: "#334155",
-              }}
-            >
-              What do you need? *
+          {/* Description */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+              Problem Description <span className="text-rose-500">*</span>
             </label>
-
             <textarea
               value={description}
-              onChange={(e) =>
-                setDescription(e.target.value)
-              }
+              onChange={(e) => setDescription(e.target.value)}
               required
-              rows={5}
-              placeholder="Describe the service you need..."
-              style={{
-                width: "100%",
-                padding: "13px 14px",
-                borderRadius: "10px",
-                border: "1px solid #cbd5e1",
-                fontSize: "15px",
-                resize: "vertical",
-                boxSizing: "border-box",
-              }}
+              rows={4}
+              placeholder="Describe the issue, work scope, or specific equipment needing attention..."
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 resize-y min-h-[100px]"
             />
           </div>
 
-          {/* ================================================= */}
-          {/* LOCATION */}
-          {/* ================================================= */}
-
-          <div
-            style={{
-              marginBottom: "20px",
-            }}
-          >
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: 600,
-                color: "#334155",
-              }}
-            >
-              Service Location *
+          {/* Location */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+              Service Location / Address <span className="text-rose-500">*</span>
             </label>
-
-            <input
-              type="text"
-              value={location}
-              onChange={(e) =>
-                setLocation(e.target.value)
-              }
-              required
-              placeholder="e.g. Mumbai, Andheri"
-              style={{
-                width: "100%",
-                padding: "13px 14px",
-                borderRadius: "10px",
-                border: "1px solid #cbd5e1",
-                fontSize: "15px",
-                boxSizing: "border-box",
-              }}
-            />
+            <div className="relative">
+              <MapPin size={17} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                required
+                placeholder="e.g. Galle Road, Colombo 03 or Ambalangoda"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+              />
+            </div>
           </div>
 
-          {/* ================================================= */}
-          {/* DATE + TIME */}
-          {/* ================================================= */}
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: "18px",
-              marginBottom: "20px",
-            }}
-          >
+          {/* Date & Time Grid */}
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: 600,
-                  color: "#334155",
-                }}
-              >
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                 Preferred Date
               </label>
-
-              <input
-                type="date"
-                value={preferredDate}
-                onChange={(e) =>
-                  setPreferredDate(e.target.value)
-                }
-                style={{
-                  width: "100%",
-                  padding: "13px 14px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "15px",
-                  boxSizing: "border-box",
-                }}
-              />
+              <div className="relative">
+                <Calendar size={17} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="date"
+                  value={preferredDate}
+                  onChange={(e) => setPreferredDate(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+                />
+              </div>
             </div>
 
             <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: 600,
-                  color: "#334155",
-                }}
-              >
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                 Preferred Time
               </label>
-
-              <input
-                type="time"
-                value={preferredTime}
-                onChange={(e) =>
-                  setPreferredTime(e.target.value)
-                }
-                style={{
-                  width: "100%",
-                  padding: "13px 14px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "15px",
-                  boxSizing: "border-box",
-                }}
-              />
+              <div className="relative">
+                <Clock size={17} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="time"
+                  value={preferredTime}
+                  onChange={(e) => setPreferredTime(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+                />
+              </div>
             </div>
           </div>
 
-          {/* ================================================= */}
-          {/* BUDGET */}
-          {/* ================================================= */}
-
-          <div
-            style={{
-              marginBottom: "28px",
-            }}
-          >
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: 600,
-                color: "#334155",
-              }}
-            >
-              Estimated Budget
+          {/* Budget */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+              Estimated Budget (Optional)
             </label>
-
-            <input
-              type="number"
-              min="0"
-              value={budget}
-              onChange={(e) =>
-                setBudget(e.target.value)
-              }
-              placeholder="e.g. 2500"
-              style={{
-                width: "100%",
-                padding: "13px 14px",
-                borderRadius: "10px",
-                border: "1px solid #cbd5e1",
-                fontSize: "15px",
-                boxSizing: "border-box",
-              }}
-            />
-
-            <p
-              style={{
-                marginTop: "7px",
-                marginBottom: 0,
-                fontSize: "12px",
-                color: "#94a3b8",
-              }}
-            >
-              This helps professionals understand
-              your expected budget.
+            <div className="relative">
+              <DollarSign size={17} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="number"
+                min="0"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                placeholder="e.g. 2500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+              />
+            </div>
+            <p className="mt-1.5 text-xs text-slate-400">
+              Assists professionals with quote preparation and quick confirmation.
             </p>
           </div>
 
-          {/* ================================================= */}
-          {/* SUBMIT */}
-          {/* ================================================= */}
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "14px",
-              border: "none",
-              borderRadius: "10px",
-              background: loading
-                ? "#94a3b8"
-                : "#2563eb",
-              color: "#ffffff",
-              fontSize: "16px",
-              fontWeight: 700,
-              cursor: loading
-                ? "not-allowed"
-                : "pointer",
-            }}
-          >
-            {loading
-              ? "Creating Request..."
-              : "Create Service Request →"}
-          </button>
+          {/* Submit Action */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 px-6 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition hover:from-blue-700 hover:to-indigo-700 hover:shadow-blue-500/30 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  <span>Dispatching Request...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create Service Request</span>
+                  <Sparkles size={16} />
+                </>
+              )}
+            </button>
+          </div>
         </form>
-      </div>
+      </main>
     </div>
   );
 };

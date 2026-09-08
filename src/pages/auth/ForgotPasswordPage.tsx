@@ -47,14 +47,14 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-8 sm:px-6 sm:py-12">
       <div className="w-full max-w-md">
         {/* Top Logo */}
-        <Link to="/" className="mb-8 block text-center text-2xl font-extrabold text-slate-900">
+        <Link to="/" className="mb-6 sm:mb-8 block text-center text-2xl font-extrabold text-slate-900 hover:text-blue-600 transition-colors">
           AIBOS
         </Link>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl sm:p-10">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl sm:p-10">
           {!submitted ? (
             <>
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
