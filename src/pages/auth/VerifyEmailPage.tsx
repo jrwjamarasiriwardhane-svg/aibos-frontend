@@ -403,35 +403,39 @@ export default function VerifyEmailPage() {
             </form>
 
             {/* Resend Code Section */}
-            <div className="mt-8 border-t border-cyan-400/10 pt-6 text-center">
-              <p className="text-xs text-slate-500">Didn't receive the email code?</p>
+            <div className="mt-8 border-t border-cyan-400/10 pt-6 text-center space-y-2">
+              <p className="text-xs text-slate-400">
+                Didn't receive the email? Check your <span className="text-amber-300 font-semibold">Spam or Junk folder</span>.
+              </p>
               
-              <button
-                type="button"
-                onClick={handleResend}
-                disabled={resendCooldown > 0 || resendLoading}
-                className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {resendLoading ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin" />
-                    Sending new code...
-                  </>
-                ) : resendCooldown > 0 ? (
-                  <>
-                    <RotateCw size={14} className="animate-spin" />
-                    Resend code in {resendCooldown}s
-                  </>
-                ) : (
-                  <>
-                    <RotateCw size={14} />
-                    Resend verification code
-                  </>
-                )}
-              </button>
+              <div>
+                <button
+                  type="button"
+                  onClick={handleResend}
+                  disabled={resendCooldown > 0 || resendLoading}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {resendLoading ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      Sending new code...
+                    </>
+                  ) : resendCooldown > 0 ? (
+                    <>
+                      <RotateCw size={14} className="animate-spin" />
+                      Resend code in {resendCooldown}s
+                    </>
+                  ) : (
+                    <>
+                      <RotateCw size={14} />
+                      Resend verification code
+                    </>
+                  )}
+                </button>
+              </div>
 
               {resendMessage && (
-                <p className="mt-2 text-xs font-medium text-slate-300 bg-slate-900 p-2.5 rounded-xl">
+                <p className="mt-2 text-xs font-medium text-slate-300 bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">
                   {resendMessage}
                 </p>
               )}

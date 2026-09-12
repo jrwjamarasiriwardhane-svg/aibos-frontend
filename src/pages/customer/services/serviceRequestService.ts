@@ -47,6 +47,12 @@ export interface CreateServiceRequestData {
   company?: string | null;
   description: string;
   location: string;
+  locationLat?: number | null;
+  locationLng?: number | null;
+  locationAddress?: string;
+  locationCity?: string;
+  locationCountry?: string;
+  urgency?: "normal" | "urgent" | "emergency";
   preferredDate?: string | null;
   preferredTime?: string;
   budget?: number;
@@ -113,4 +119,75 @@ export const cancelServiceRequest = async (
   });
 
   return data.request;
+};
+
+export const getAvailableServiceRequests = async (
+  token: string
+): Promise<ServiceRequest[]> => {
+  const data = await apiRequest<{
+    success: boolean;
+    count: number;
+    requests: ServiceRequest[];
+  }>("/service-requests/available", token, {
+    method: "GET",
+  });
+
+  return data.requests || [];
+};
+
+export const submitQuotation = async (
+  token: string,
+  requestId: string,
+  quote: { amount: number; message?: string; estimatedDuration?: string }
+): Promise<any> => {
+  return await apiRequest<{
+    success: boolean;
+    message: string;
+    quotations: any[];
+  }>(`/service-requests/${requestId}/quote`, token, {
+    method: "POST",
+    body: JSON.stringify(quote),
+  });
+};
+
+export const getQuotations = async (
+  token: string,
+  requestId: string
+): Promise<any[]> => {
+  const data = await apiRequest<{
+    success: boolean;
+    quotations: any[];
+  }>(`/service-requests/${requestId}/quotes`, token, {
+    method: "GET",
+  });
+
+  return data.quotations || [];
+};
+
+export const acceptQuotation = async (
+  token: string,
+  requestId: string,
+  quoteId: string
+): Promise<any> => {
+  return await apiRequest<{
+    success: boolean;
+    message: string;
+    request: any;
+  }>(`/service-requests/${requestId}/quotes/${quoteId}/accept`, token, {
+    method: "PUT",
+  });
+};
+
+export const rejectQuotation = async (
+  token: string,
+  requestId: string,
+  quoteId: string
+): Promise<any> => {
+  return await apiRequest<{
+    success: boolean;
+    message: string;
+    request: any;
+  }>(`/service-requests/${requestId}/quotes/${quoteId}/reject`, token, {
+    method: "PUT",
+  });
 };

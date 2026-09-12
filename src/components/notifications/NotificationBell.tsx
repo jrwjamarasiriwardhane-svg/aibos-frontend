@@ -38,8 +38,11 @@ export default function NotificationBell() {
     try {
       setLoading(true);
 
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_URL || "http://localhost:5000/api";
+
       const response = await fetch(
-        "http://localhost:5000/api/notifications",
+        `${API_BASE_URL}/notifications`,
         {
           method: "GET",
           headers: {

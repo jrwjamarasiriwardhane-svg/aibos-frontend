@@ -12,7 +12,9 @@ import {
   CheckCircle2,
   XCircle,
   BriefcaseBusiness,
+  BarChart3,
 } from "lucide-react";
+import AdminAnalyticsSection from "./AdminAnalyticsSection";
 
 interface Professional {
   _id: string;
@@ -45,8 +47,17 @@ export default function AdminDashboard() {
     Professional[]
   >([]);
 
+  const [overviewCounts, setOverviewCounts] = useState<{
+    totalUsers: number;
+    professionals: number;
+    companies: number;
+  } | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentTab, setCurrentTab] = useState<"verification" | "analytics">(
+    "verification"
+  );
 
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"
@@ -55,7 +66,7 @@ export default function AdminDashboard() {
   const token = localStorage.getItem("token");
 
   // ======================================================
-  // FETCH PENDING PROFESSIONALS
+  // FETCH PENDING PROFESSIONALS & PLATFORM STATS
   // ======================================================
 
   const fetchPendingProfessionals = async () => {
@@ -106,8 +117,37 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchOverviewCounts = async () => {
+    try {
+      if (!token) return;
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/analytics/admin/overview`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        const overview = json.data?.overview || json.analytics?.overview || json.data?.users;
+        if (overview) {
+          setOverviewCounts({
+            totalUsers: overview.totalUsers ?? overview.total ?? 0,
+            professionals: overview.professionals ?? 0,
+            companies: overview.companies ?? 0,
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch overview counts:", e);
+    }
+  };
+
   useEffect(() => {
     fetchPendingProfessionals();
+    fetchOverviewCounts();
   }, []);
 
   // ======================================================
@@ -291,25 +331,57 @@ export default function AdminDashboard() {
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-10">
 
-        {/* PAGE TITLE */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-400 font-mono">
+              ADMINISTRATION COMMAND
+            </p>
 
-        <div>
+            <h2 className="mt-1 text-3xl font-bold text-white">
+              Dashboard
+            </h2>
 
-          <p className="text-sm font-semibold uppercase tracking-wide text-cyan-400">
-            ADMINISTRATION
-          </p>
+            <p className="mt-1 text-slate-400 text-sm">
+              Manage professionals, platform analytics, and dispatch verification across AIBOS.
+            </p>
+          </div>
 
-          <h2 className="mt-2 text-3xl font-bold text-white">
-            Dashboard
-          </h2>
+          {/* TAB SWITCHER */}
+          <div className="flex items-center gap-2 rounded-2xl bg-slate-900/90 border border-slate-800 p-1.5 backdrop-blur-xl">
+            <button
+              type="button"
+              onClick={() => setCurrentTab("verification")}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+                currentTab === "verification"
+                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <UserCheck size={14} />
+              <span>Verifications ({professionals.length})</span>
+            </button>
 
-          <p className="mt-2 text-slate-500">
-            Manage professionals, companies and
-            verification requests across AIBOS.
-          </p>
-
+            <button
+              type="button"
+              onClick={() => setCurrentTab("analytics")}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+                currentTab === "analytics"
+                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <BarChart3 size={14} />
+              <span>Platform Analytics</span>
+            </button>
+          </div>
         </div>
 
+        {currentTab === "analytics" ? (
+          <div className="mt-8">
+            <AdminAnalyticsSection />
+          </div>
+        ) : (
+          <>
         {/* ==================================================
             STATS
         ================================================== */}
@@ -331,7 +403,7 @@ export default function AdminDashboard() {
             </div>
 
             <p className="mt-4 text-3xl font-bold text-slate-900">
-              —
+              {overviewCounts !== null ? overviewCounts.totalUsers.toLocaleString() : "..."}
             </p>
 
           </div>
@@ -351,7 +423,7 @@ export default function AdminDashboard() {
             </div>
 
             <p className="mt-4 text-3xl font-bold text-slate-900">
-              —
+              {overviewCounts !== null ? overviewCounts.professionals.toLocaleString() : "..."}
             </p>
 
           </div>
@@ -391,7 +463,7 @@ export default function AdminDashboard() {
             </div>
 
             <p className="mt-4 text-3xl font-bold text-slate-900">
-              —
+              {overviewCounts !== null ? overviewCounts.companies.toLocaleString() : "..."}
             </p>
 
           </div>
@@ -674,6 +746,8 @@ export default function AdminDashboard() {
             )}
 
         </section>
+        </>
+      )}
 
       </main>
     </div>

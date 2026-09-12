@@ -24,10 +24,13 @@ import ProfessionalLogin from "./pages/professional/LoginPage";
 import ProfessionalRegister from "./pages/professional/RegisterPage";
 import ProfessionalDashboard from "./pages/professional/ProfessionalDashboard";
 import ProfessionalProfile from "./pages/professional/ProfilePage";
+import ProfessionalJobBoard from "./pages/professional/ProfessionalJobBoard";
+import ProfessionalNotificationsPage from "./pages/professional/ProfessionalNotificationsPage";
 
 import CompanyLogin from "./pages/company/LoginPage";
 import CompanyRegister from "./pages/company/RegisterPage";
 import CompanyDashBoard from "./pages/company/CompanyDashBoard";
+import CompanyNotificationsPage from "./pages/company/CompanyNotificationsPage";
 
 function App() {
   useEffect(() => {
@@ -180,12 +183,7 @@ function App() {
 
         <Route
           path="/professional/jobs"
-          element={
-            <Navigate
-              to="/professional/dashboard"
-              replace
-            />
-          }
+          element={<ProfessionalJobBoard />}
         />
 
         <Route
@@ -210,12 +208,7 @@ function App() {
 
         <Route
           path="/professional/notifications"
-          element={
-            <Navigate
-              to="/professional/dashboard"
-              replace
-            />
-          }
+          element={<ProfessionalNotificationsPage />}
         />
 
         <Route
@@ -245,6 +238,11 @@ function App() {
         <Route
           path="/company/dashboard"
           element={<CompanyDashBoard />}
+        />
+
+        <Route
+          path="/company/notifications"
+          element={<CompanyNotificationsPage />}
         />
 
         {/* ==============================
